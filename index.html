@@ -1548,17 +1548,165 @@ function processFile(file,type){
 }
 async function processPDF(file,type,st){
   if(!window.pdfjsLib){
-    await new Promise(function(res,rej){var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';s.onload=function(){if(window.pdfjsLib&&!window.pdfjsLib.GlobalWorkerOptions.workerSrc)window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';res();};s.onerror=rej;document.head.appendChild(s);});
+    await new Promise(function(res,rej){
+      var s=document.createElement('script');
+      s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+      s.onload=function(){
+        if(window.pdfjsLib&&!window.pdfjsLib.GlobalWorkerOptions.workerSrc)
+          window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        res();
+      };
+      s.onerror=rej;
+      document.head.appendChild(s);
+    });
   }
   try{
-    var buf=await file.arrayBuffer(),pdf=await window.pdfjsLib.getDocument({data:buf}).promise;
-    var pages=Math.min(pdf.numPages,4),imgs=[];
-    tlog('to','  PDF/Pages: '+pdf.numPages+' Seite(n)');st.textContent='🖼 Rendere...';
-    for(var i=1;i<=pages;i++){var pg=await pdf.getPage(i);var vp=pg.getViewport({scale:1.5});var cv=document.createElement('canvas');cv.width=vp.width;cv.height=vp.height;await pg.render({canvasContext:cv.getContext('2d'),viewport:vp}).promise;imgs.push(cv.toDataURL('image/jpeg',.82).split(',')[1]);tlog('to','  ✓ Seite '+i+'/'+pages);}
-    st.textContent='🤖 Vision KI...';
-    await aiVision(imgs,type,st);
-  }catch(err){st.textContent='⚠️ '+err.message;tlog('te','  ✗ '+err.message);}
+    var buf=await file.arrayBuffer();
+    var pdf=await window.pdfjsLib.getDocument({data:buf}).promise;
+    var pages=Math.min(pdf.numPages,4);
+    tlog('to','  PDF: '+pdf.numPages+' Seite(n)');
+    // Try text extraction first (fast, no API needed)
+    var allText='';
+    st.textContent='📄 Text extrahieren...';
+    for(var i=1;i<=pages;i++){
+      var pg=await pdf.getPage(i);
+      var tc=await pg.getTextContent();
+      var pageText=tc.items.map(function(it){return it.str;}).join(' ');
+      allText+=pageText+'\n';
+      tlog('to','  ✓ Seite '+i+'/'+pages+' ('+pageText.length+' Zeichen)');
+    }
+    allText=allText.trim();
+    if(allText.length > 80){
+      // We have readable text — try AI, fall back to regex
+      tlog('to','  Text-Extraktion: '+allText.length+' Zeichen — versuche KI...');
+      await aiExtract(allText,type,st);
+    } else {
+      // No readable text (scanned PDF) — render to images for vision
+      st.textContent='🖼 Scanned PDF → Vision KI...';
+      tlog('to','  Kein Text gefunden → Vision-Modus');
+      var imgs=[];
+      for(var j=1;j<=pages;j++){
+        var pg2=await pdf.getPage(j);
+        var vp=pg2.getViewport({scale:1.5});
+        var cv2=document.createElement('canvas');cv2.width=vp.width;cv2.height=vp.height;
+        await pg2.render({canvasContext:cv2.getContext('2d'),viewport:vp}).promise;
+        imgs.push(cv2.toDataURL('image/jpeg',.82).split(',')[1]);
+      }
+      await aiVision(imgs,type,st);
+    }
+  }catch(err){
+    st.textContent='⚠️ PDF-Fehler: '+err.message;
+    tlog('te','  ✗ '+err.message);
+  }
 }
+
+// SMART REGEX FALLBACK — extracts CV data without any API
+function regexExtract(text){
+  var p={fn:'',ln:'',title:'',bio:'',email:'',phone:'',location:'',website:'',github:'',linkedin:'',
+         availability:'',tagline:'',highlight:'',
+         skills:{tech:[],soft:[],lang:[],cert:[]},
+         experience:[],education:[],courses:[],projects:[],awards:[]};
+  // Name: first 2 capitalized words near top of doc
+  var nameM=text.match(/^([A-ZÄÖÜ][a-zäöü]+)\s+([A-ZÄÖÜ][a-zäöü]+(?:\s+[A-ZÄÖÜ][a-zäöü]+)?)/m);
+  if(nameM){p.fn=nameM[1];p.ln=nameM[2];}
+  // Email
+  var emM=text.match(/\b[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}\b/);
+  if(emM)p.email=emM[0];
+  // Phone (German format)
+  var phM=text.match(/(\+49[\s\-]?|0)[\d][\d\s\-/]{7,15}/);
+  if(phM)p.phone=phM[0].trim();
+  // Website
+  var webM=text.match(/https?:\/\/[^\s"<>]+|www\.[^\s"<>]+/i);
+  if(webM)p.website=webM[0];
+  // GitHub
+  var ghM=text.match(/github\.com\/([^\s/"<>]+)/i);
+  if(ghM)p.github='github.com/'+ghM[1];
+  // LinkedIn
+  var liM=text.match(/linkedin\.com\/in\/([^\s/"<>]+)/i);
+  if(liM)p.linkedin='linkedin.com/in/'+liM[1];
+  // Location / Address
+  var locM=text.match(/(\d{5})\s+([A-ZÄÖÜ][a-zäöü]+(?:\s+[A-ZÄÖÜ][a-zäöü]+)?)/);
+  if(locM)p.location=locM[2]+' (PLZ '+locM[1]+')';
+  // Title / Berufsbezeichnung (line after name, usually)
+  var lines=text.split('\n').map(function(l){return l.trim();}).filter(function(l){return l.length>3;});
+  if(lines.length>1)p.title=lines[1].substring(0,80);
+  // Bio: paragraph starting with "Ich " or "Technik" or 3+ sentences
+  var bioM=text.match(/(Ich\s+[^.]{40,300}\.|Technik[^.]{40,300}\.)/);
+  if(bioM)p.bio=bioM[0].trim();
+  else{
+    // Take first long paragraph
+    var paras=text.split(/\n{2,}/);
+    for(var i=0;i<paras.length;i++){
+      if(paras[i].length>80&&paras[i].length<600&&!paras[i].match(/^[A-ZÄÖÜ\s]{5,}$/)){
+        p.bio=paras[i].replace(/\s+/g,' ').trim();break;
+      }
+    }
+  }
+  // Skills: look for HTML/CSS, Python, JavaScript, etc.
+  var techKw=['HTML','CSS','JavaScript','Python','Java','C\\+\\+','C#','React','Vue','Node','SQL','PHP','TypeScript','Swift','Kotlin','Go','Rust','Docker','Git','Linux','Windows','Excel','Word','PowerPoint','Figma','Photoshop','MATLAB','R\\b','Bash','REST','API','AWS','Azure','GCP'];
+  techKw.forEach(function(kw){
+    var r=new RegExp('\\b'+kw+'\\b','i');
+    if(r.test(text)&&p.skills.tech.indexOf(kw.replace(/\\/g,''))<0)p.skills.tech.push(kw.replace(/\\/g,''));
+  });
+  // Soft Skills keywords
+  var softKw=['Lernbereitschaft','Teamfähigkeit','Kommunikation','Problemlösung','Analytisch','Kreativ','Selbstständig','Zuverlässig','Organisiert','Flexibel','Eigeninitiative','Strukturiert','Entscheidungsfindung'];
+  softKw.forEach(function(kw){if(new RegExp(kw,'i').test(text))p.skills.soft.push(kw);});
+  // Languages
+  var langKw=[['Deutsch','German'],['Englisch','English'],['Arabisch','Arabic'],['Französisch','French'],['Spanisch','Spanish'],['Türkisch','Turkish'],['Russisch','Russian'],['Chinesisch','Chinese']];
+  langKw.forEach(function(lp){
+    if(new RegExp(lp[0],'i').test(text)||new RegExp(lp[1],'i').test(text)){
+      var lvM=text.match(new RegExp(lp[0]+'[^\\n]{0,40}(Mutterspra|C[12]|B[12]|A[12]|Fortgeschr|Basic|Nativ|Fluent|Native|Proficient)','i'));
+      var level=lvM?lvM[1].substring(0,12):'';
+      p.skills.lang.push(lp[0]+(level?' ('+level+')':''));
+    }
+  });
+  // Experience blocks
+  var expSections=text.split(/BERUFSERFAHRUNG|EXPERIENCE|ARBEITSERFAHRUNG/i);
+  if(expSections.length>1){
+    var expText=expSections[1].split(/AUSBILDUNG|BILDUNG|EDUCATION|STUDIUM|SKILLS|KOMPETEN/i)[0];
+    var jobBlocks=expText.split(/\n{2,}/);
+    jobBlocks.forEach(function(block){
+      var bl=block.trim();
+      if(bl.length<15)return;
+      var periodM=bl.match(/(Januar|Februar|März|April|Mai|Juni|Juli|August|September|Oktober|November|Dezember|Jan|Feb|Mär|Apr|Jun|Jul|Aug|Sep|Okt|Nov|Dez|[A-Z][a-z]+)\s*\d{4}\s*[–\-]\s*(.*?\d{4}|heute|present)/i);
+      var period=periodM?periodM[0]:'';
+      var blines=bl.split('\n').filter(function(l){return l.trim().length>3;});
+      if(blines[0]&&blines[0].length<80){
+        p.experience.push({title:blines[0].trim(),company:blines[1]?blines[1].trim():'',period:period,bullets:blines.slice(2).join(' · ').substring(0,200),description:''});
+      }
+    });
+  }
+  // Education blocks
+  var eduSections=text.split(/AUSBILDUNG|BILDUNG|EDUCATION|STUDIUM/i);
+  if(eduSections.length>1){
+    var eduText=eduSections[1].split(/BERUFSERFAHRUNG|SKILLS|KOMPETEN|SPRACHEN|INTERESTS|KONTAKT/i)[0];
+    var eduBlocks=eduText.split(/\n{2,}/);
+    eduBlocks.forEach(function(block){
+      var bl=block.trim();
+      if(bl.length<10)return;
+      var yearM=bl.match(/\d{4}\s*[–\-]\s*(\d{4}|heute|present)/i);
+      var year=yearM?yearM[0]:'';
+      var blines=bl.split('\n').filter(function(l){return l.trim().length>3;});
+      if(blines[0]&&blines[0].length<120){
+        p.education.push({degree:blines[0].trim(),school:blines[1]?blines[1].trim():'',year:year,grade:'',description:''});
+      }
+    });
+  }
+  // Führerschein → cert
+  if(/Führerschein/i.test(text)){var fsM=text.match(/Führerschein[:\s]+([A-Z,\s]+)/i);p.skills.cert.push('Führerschein'+(fsM?' '+fsM[1].trim().substring(0,10):''));}
+  // Interests
+  var intM=text.match(/INTERESSEN[^]*?(?=\n[A-ZÄÖÜ]{4,}|$)/i);
+  if(intM){
+    var intText=intM[0].replace(/INTERESSEN/i,'').trim();
+    // Extract individual interests (often as tags)
+    var tags=intText.match(/[A-ZÄÖÜ][a-zäöü\s&()]+/g)||[];
+    if(tags.length)p.interests=tags.slice(0,8).join(', ');
+  }
+  // Availability
+  if(/sofort verfügbar|available immediately|ab sofort/i.test(text))p.availability='Ab sofort verfügbar';
+  return p;
+}
+
 async function aiVision(imgs,type,st){
   var isCV=type==='cv';
   var prompt=isCV?'Extract CV/Resume data. Detect language (Arabic, German, English). Return JSON only: {"fn":"","ln":"","title":"","bio":"","tagline":"","availability":"","email":"","phone":"","github":"","linkedin":"","website":"","location":"","skills":{"tech":[],"soft":[],"lang":[],"cert":[]},"experience":[{"title":"","company":"","period":"","location":"","bullets":"","description":""}],"education":[{"degree":"","school":"","year":"","grade":"","description":""}],"courses":[{"name":"","provider":"","year":""}],"projects":[{"name":"","desc":"","tech":"","url":"","impact":""}],"awards":[{"title":"","org":"","year":""}]}. JSON ONLY.':'Extract: tagline, bio_addition, highlight. JSON: {"tagline":"","bio_addition":"","highlight":""}. JSON ONLY.';
@@ -1569,23 +1717,59 @@ async function aiVision(imgs,type,st){
     var data=await res.json();if(data.error)throw new Error(data.error.message);
     var raw=data.content.map(function(c){return c.text||'';}).join('').replace(/```json|```/g,'').trim();
     var p=JSON.parse(raw);
-    if(isCV){fillExtracted(p);st.textContent='✅ Ausgelesen / Extracted / تم الاستخراج!';}
-    else{if(p.tagline&&!D.tagline){D.tagline=p.tagline;var e=document.getElementById('i-tag');if(e)e.value=p.tagline;}if(p.highlight){D.highlight=p.highlight;var e2=document.getElementById('i-hl');if(e2)e2.value=p.highlight;}st.textContent='✅ Verarbeitet!';}
-    tlog('tok','  ✓ Vision fertig');lr();
-  }catch(err){st.textContent='⚠️ '+err.message;tlog('te','  ✗ '+err.message);}
+    if(isCV){fillExtracted(p);st.textContent='✅ KI-Extraktion erfolgreich!';}
+    else{if(p.tagline&&!D.tagline){D.tagline=p.tagline;var e=document.getElementById('i-tag');if(e)e.value=p.tagline;}st.textContent='✅ Verarbeitet!';}
+    tlog('tok','  ✓ Vision OK');lr();
+  }catch(err){
+    var isNet=(err.message||'').toLowerCase().match(/fetch|failed|network|cors/);
+    tlog('te','  ✗ '+err.message+(isNet?' → Fallback-Extraktion':' → Überprüfe API'));
+    if(isNet){
+      st.textContent='⚡ KI offline → Auto-Analyse läuft...';
+      // We can't do regex on images, show helpful message
+      st.textContent='⚠️ KI nicht verfügbar. Für PDF-Vision öffne die Seite über Claude.ai. Text-PDFs werden auch ohne KI erkannt.';
+      st.style.color='var(--blue)';
+    } else {
+      st.textContent='⚠️ '+err.message;
+    }
+  }
 }
+
 async function aiExtract(text,type,st){
   var prompt=type==='cv'
     ?'Extract CV data. Detect language. JSON only: {"fn":"","ln":"","title":"","bio":"","tagline":"","availability":"","email":"","phone":"","github":"","linkedin":"","website":"","location":"","skills":{"tech":[],"soft":[],"lang":[],"cert":[]},"experience":[{"title":"","company":"","period":"","location":"","bullets":"","description":""}],"education":[{"degree":"","school":"","year":"","grade":"","description":""}],"courses":[{"name":"","provider":"","year":""}],"projects":[{"name":"","desc":"","tech":"","url":"","impact":""}],"awards":[{"title":"","org":"","year":""}]}. JSON ONLY.\n\n'+text.substring(0,3500)
     :'Extract tagline, bio_addition, highlight. JSON: {"tagline":"","bio_addition":"","highlight":""}. JSON ONLY.\n\n'+text.substring(0,2000);
   try{
     var res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1500,messages:[{role:'user',content:prompt}]})});
-    var data=await res.json();var raw=data.content.map(function(c){return c.text||'';}).join('').replace(/```json|```/g,'').trim();
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    var data=await res.json();
+    if(data.error)throw new Error(data.error.message);
+    var raw=data.content.map(function(c){return c.text||'';}).join('').replace(/```json|```/g,'').trim();
     var p=JSON.parse(raw);
-    if(type==='cv'){fillExtracted(p);st.textContent='✅ Extrahiert!';}
+    if(type==='cv'){fillExtracted(p);st.textContent='✅ KI-Extraktion erfolgreich!';}
     else{if(p.tagline&&!D.tagline){D.tagline=p.tagline;var e=document.getElementById('i-tag');if(e)e.value=p.tagline;}st.textContent='✅ Verarbeitet!';}
-    tlog('tok','  ✓ Fertig');lr();
-  }catch(err){st.textContent='⚠️ Bitte manuell eingeben';tlog('te','  ✗ '+err.message);}
+    tlog('tok','  ✓ KI fertig');lr();
+  }catch(err){
+    var isNet=(err.message||'').toLowerCase().match(/fetch|failed|network|http 4|http 0|cors/);
+    tlog('tw','  ↻ KI nicht verfügbar ('+err.message+') → Regex-Fallback');
+    if(type==='cv'){
+      // SMART FALLBACK: regex-based extraction, no API needed
+      st.textContent='⚡ Auto-Analyse (ohne KI)...';
+      try{
+        var p2=regexExtract(text);
+        fillExtracted(p2);
+        var filled=[p2.fn,p2.email,p2.phone,p2.location].filter(function(v){return v&&v.length>0;}).length;
+        st.textContent='✅ Auto-Analyse: '+filled+' Felder erkannt'+(isNet?' · KI via Claude.ai für vollständige Extraktion':'');
+        st.style.color='var(--mint)';
+        tlog('tok','  ✓ Regex-Fallback: '+filled+' Felder');
+        lr();
+      }catch(e2){
+        st.textContent='⚠️ Bitte Daten manuell eingeben (Schritt 2)';
+        tlog('te','  ✗ Fallback: '+e2.message);
+      }
+    } else {
+      st.textContent='⚠️ KI nicht verfügbar — bitte manuell ergänzen';
+    }
+  }
 }
 function tlog(cls,msg){var b=document.getElementById('term-body');if(!b)return;var d=document.createElement('div');d.className='tl';d.innerHTML='<span class="'+cls+'">'+msg+'</span>';b.appendChild(d);b.scrollTop=b.scrollHeight;}
 
