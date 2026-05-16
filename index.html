@@ -263,6 +263,76 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
 
 /* RESPONSIVE */
 @media(max-width:768px){.build{grid-template-columns:1fr}.br{display:none}.bl{padding:16px 14px}.f2,.f3{grid-template-columns:1fr}.l-h1{font-size:34px}.exp-grid{grid-template-columns:1fr}.ai-grid{grid-template-columns:1fr}.ai-grid-3{grid-template-columns:1fr}.hdr-mid{display:none}}
+
+/* ══ ENHANCED FEATURES ══════════════════════════════════════════════ */
+
+/* PHOTO MODES */
+.photo-mode-row{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.pmode-btn{font-size:8px;font-family:'JetBrains Mono',monospace;padding:3px 9px;border:1px solid var(--hr);border-radius:3px;background:transparent;color:var(--text2);cursor:pointer;transition:all .18s;letter-spacing:.8px}
+.pmode-btn:hover,.pmode-btn.on{border-color:var(--teal);color:var(--teal);background:rgba(22,160,133,.07)}
+.photo-preview-wrap{position:relative;width:60px;height:60px;flex-shrink:0}
+.pixel-canvas{position:absolute;inset:0;border-radius:50%;cursor:crosshair;display:none}
+.pixel-canvas.on{display:block}
+.qr-preview{width:60px;height:60px;border-radius:50%;overflow:hidden;display:none;background:var(--bg2);padding:4px}
+.qr-preview.on{display:block}
+.avatar-big{display:none;width:60px;height:60px;border-radius:50%;overflow:hidden;align-items:center;justify-content:center}
+.avatar-big.on{display:flex}
+
+/* AVATAR STYLE PICKER */
+.av-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
+.av-opt{width:100%;aspect-ratio:1;border-radius:50%;cursor:pointer;border:2px solid var(--hr);transition:all .2s;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.av-opt:hover,.av-opt.sel{border-color:var(--teal);box-shadow:0 0 0 2px var(--teal),0 0 12px rgba(22,160,133,.3)}
+
+/* TRANSLATE PANEL */
+.trans-bar{margin-top:10px;padding:9px 12px;background:var(--bg3);border:1px solid var(--hr);border-radius:4px;display:none}
+.trans-bar.on{display:block}
+.trans-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.trans-title{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--teal);font-family:'JetBrains Mono',monospace}
+.trans-st{font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--text2);padding:5px 8px;background:var(--bg2);border-radius:3px;min-height:24px}
+.trans-lang-row{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap}
+.trans-tag{font-size:8px;font-family:'JetBrains Mono',monospace;padding:2px 8px;border-radius:3px;border:1px solid}
+.trans-tag.ok{color:var(--mint);border-color:rgba(0,229,160,.3);background:rgba(0,229,160,.07)}
+.trans-tag.pending{color:var(--blue);border-color:rgba(96,165,250,.3);background:rgba(96,165,250,.07)}
+.trans-tag.err{color:#ef4444;border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.07)}
+
+/* ATS MODAL */
+.ats-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:900;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(8px)}
+.ats-overlay.on{display:flex}
+.ats-modal{background:var(--bg2);border:1px solid var(--hr);border-radius:8px;width:100%;max-width:480px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.6)}
+.ats-hdr{padding:16px 20px 12px;border-bottom:1px solid var(--hr);display:flex;align-items:center;justify-content:space-between}
+.ats-logo{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--teal);letter-spacing:2px;display:flex;align-items:center;gap:7px}
+.ats-logo-dot{width:7px;height:7px;border-radius:50%;background:var(--teal);animation:blink 1s step-end infinite}
+.ats-close{background:none;border:none;color:var(--text2);cursor:pointer;font-size:16px;padding:2px 7px;border-radius:3px;transition:color .2s}
+.ats-close:hover{color:var(--text)}
+.ats-body{padding:18px 20px}
+.ats-photo-row{display:flex;gap:14px;align-items:center;margin-bottom:16px}
+.ats-photo-thumb{width:56px;height:56px;border-radius:4px;overflow:hidden;background:var(--bg3);border:1px solid var(--hr);flex-shrink:0}
+.ats-photo-thumb img{width:100%;height:100%;object-fit:cover}
+.ats-scan-info{flex:1}
+.ats-scan-title{font-size:12px;font-weight:600;margin-bottom:3px}
+.ats-scan-sub{font-size:9px;color:var(--text2);line-height:1.6;font-family:'JetBrains Mono',monospace}
+.ats-progress{height:3px;background:var(--bg3);border-radius:2px;overflow:hidden;margin-bottom:12px;display:none}
+.ats-progress-bar{height:100%;background:linear-gradient(90deg,var(--teal),var(--mint));width:0;transition:width .3s}
+.ats-log{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text2);min-height:48px;margin-bottom:12px;line-height:1.9;display:none}
+.ats-results{display:none}
+.ats-score-big{text-align:center;margin-bottom:16px;padding:16px;background:var(--bg3);border-radius:5px;border:1px solid var(--hr)}
+.ats-score-num{font-family:'Playfair Display',serif;font-size:52px;font-weight:900;color:var(--teal);line-height:1}
+.ats-score-lbl{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--text2);margin-top:4px;font-family:'JetBrains Mono',monospace}
+.ats-cats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.ats-cat{background:var(--bg3);border:1px solid var(--hr);border-radius:3px;padding:9px 11px}
+.ats-cat-name{font-size:8px;color:var(--text2);margin-bottom:4px;font-family:'JetBrains Mono',monospace;letter-spacing:.8px}
+.ats-cat-bar{height:3px;background:var(--hr);border-radius:2px;overflow:hidden;margin-bottom:3px}
+.ats-cat-fill{height:100%;border-radius:2px}
+.ats-cat-val{font-size:10px;font-weight:600;color:var(--text)}
+.ats-disclaimer{padding:10px 12px;background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.15);border-radius:4px;font-size:9px;color:#ef4444;line-height:1.65;text-align:center;font-family:'JetBrains Mono',monospace}
+.ats-disclaimer b{display:block;margin-bottom:2px;font-size:10px}
+.ats-noimg{text-align:center;padding:24px;color:var(--text2);font-size:11px;line-height:1.8}
+
+/* EXPORT LANG MULTI */
+.exp-lang-note{padding:10px 14px;background:rgba(22,160,133,.06);border:1px solid rgba(22,160,133,.15);border-radius:4px;font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--teal);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+
+/* PHOTO QUALITY: no hard border in output */
+.photo-ring img{image-rendering:-webkit-optimize-contrast;image-rendering:crisp-edges;filter:contrast(1.04) saturate(1.08)}
 </style>
 </head>
 <body>
@@ -270,7 +340,48 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
 <div class="toast" id="toast"></div>
 <div class="var-overlay" id="var-overlay" onclick="toggleVariants()"></div>
 
-<!-- VARIANT PANEL -->
+<!-- ATS SATIRICAL SCANNER MODAL -->
+<div class="ats-overlay" id="ats-overlay" onclick="closeATS(event)">
+  <div class="ats-modal" onclick="event.stopPropagation()">
+    <div class="ats-hdr">
+      <div class="ats-logo"><div class="ats-logo-dot"></div>FOLIO·SCAN™ · ATS-Bewertungssystem</div>
+      <button class="ats-close" onclick="closeATS()">✕</button>
+    </div>
+    <div class="ats-body">
+      <div class="ats-photo-row">
+        <div class="ats-photo-thumb" id="ats-thumb">
+          <svg width="56" height="56" viewBox="0 0 56 56" fill="none"><rect width="56" height="56" fill="rgba(22,160,133,.1)"/><circle cx="28" cy="22" r="10" fill="rgba(22,160,133,.3)"/><path d="M10 50c0-9.9 8.1-18 18-18s18 8.1 18 18" fill="rgba(22,160,133,.3)"/></svg>
+        </div>
+        <div class="ats-scan-info">
+          <div class="ats-scan-title" id="ats-scan-title">ATS Candidate Analysis</div>
+          <div class="ats-scan-sub" id="ats-scan-sub">Blazing fast · Absolutely zero fact based<br>As real as ATS scores.</div>
+        </div>
+      </div>
+      <div class="ats-progress" id="ats-prog"><div class="ats-progress-bar" id="ats-prog-bar"></div></div>
+      <div class="ats-log" id="ats-log"></div>
+      <div class="ats-results" id="ats-results">
+        <div class="ats-score-big">
+          <div class="ats-score-num" id="ats-big-num">--</div>
+          <div class="ats-score-lbl" id="ats-big-lbl">OVERALL ATS SCORE™</div>
+        </div>
+        <div class="ats-cats" id="ats-cats"></div>
+        <div class="ats-disclaimer">
+          <b>⚠️ Satirische Funktion / Satirical Feature / ميزة ساخرة</b>
+          Diese Punkte sind vollständig erfunden. ATS-Systeme, die auf äußerlichem Erscheinungsbild basieren, sind unethisch und in vielen Ländern illegal. Diese Funktion verspottet solche Systeme.<br><br>
+          <i>"As real as ATS scores."</i>
+        </div>
+      </div>
+      <div class="ats-noimg" id="ats-noimg" style="display:none">
+        📷 Kein Foto hochgeladen.<br><span style="font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--teal)">Lade ein Foto in Schritt 2 hoch,<br>damit wir unsinnige Werte generieren können.</span>
+      </div>
+      <div style="display:flex;gap:7px;margin-top:14px;flex-wrap:wrap" id="ats-actions">
+        <button class="btn btn-g btn-s" id="ats-run-btn" onclick="runATSScan()">🔬 Analyse starten</button>
+        <button class="btn btn-o btn-s" onclick="closeATS()">Schließen</button>
+        <span style="margin-left:auto;font-size:8px;font-family:'JetBrains Mono',monospace;color:var(--text2);align-self:center">v4.2.0-satirical</span>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="var-panel" id="var-panel">
   <div class="vph"><div class="vpt" id="vp-title">Varianten</div><div class="vps" id="vp-sub">Mehrere Bewerbungsprofile</div></div>
   <div class="vpb" id="vpb"></div>
@@ -288,6 +399,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
   <div class="hdr-r">
     <button class="hbtn" id="lang-btn" onclick="cycleLang()">DE → EN</button>
     <button class="hbtn var" onclick="toggleVariants()" id="var-btn">⊞ Varianten</button>
+    <button class="hbtn" onclick="showATS()" id="ats-btn" title="ATS Scanner (satirisch)">🎭 ATS·SCAN</button>
     <button class="btn btn-o btn-s" onclick="go(0)" style="display:none" id="hdr-back">← Zurück</button>
     <button class="mode-btn" onclick="toggleMode()">
       <div class="mode-knob"></div>
@@ -385,15 +497,31 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
     <div class="sttl" id="s1-ttl">Deine Identität</div>
     <p class="stsub" id="s1-sub">Name, Titel und deine Geschichte — der erste Eindruck zählt.</p>
     <div class="photo-zone">
-      <div class="photo-ring" id="photoRing" onclick="document.getElementById('photoInp').click()">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+      <div class="photo-preview-wrap" id="photoPreviewWrap" style="width:60px;height:60px;position:relative;flex-shrink:0">
+        <div class="photo-ring" id="photoRing" onclick="triggerPhotoClick()" style="width:60px;height:60px;border:2px dashed var(--hr);border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;transition:border-color .2s;position:absolute;inset:0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+        </div>
+        <canvas class="pixel-canvas" id="pixelCanvas" width="60" height="60" style="position:absolute;inset:0;border-radius:50%;cursor:crosshair;display:none"></canvas>
+        <div id="qrPreview" style="position:absolute;inset:0;border-radius:50%;overflow:hidden;display:none;background:var(--bg2);padding:4px"></div>
+        <div id="avatarBig" style="position:absolute;inset:0;border-radius:50%;overflow:hidden;display:none"></div>
       </div>
-      <div>
+      <div style="flex:1">
         <div style="font-size:11px;font-weight:600;margin-bottom:2px" id="photo-lbl">Profilbild / Profile Photo</div>
-        <div style="font-size:9px;color:var(--text2);margin-bottom:5px" id="photo-sub">Kein Foto? Initialen-Avatar wird generiert.</div>
-        <div style="display:flex;gap:5px">
-          <button class="btn btn-o btn-s" onclick="document.getElementById('photoInp').click()" id="photo-choose">Wählen</button>
-          <button class="btn btn-o btn-s" id="photoClearBtn" onclick="clearPhoto()" style="display:none">✕</button>
+        <div style="font-size:9px;color:var(--text2);margin-bottom:5px" id="photo-sub">Kein Foto? Wähle einen Avatar-Stil unten.</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap">
+          <button class="btn btn-o btn-s" onclick="triggerPhotoClick()" id="photo-choose">📷 Foto wählen</button>
+          <button class="btn btn-o btn-s" id="photoClearBtn" onclick="clearPhoto()" style="display:none">✕ Entfernen</button>
+          <button class="btn btn-o btn-s" onclick="showNoPhotoOpts()" id="avatarGenBtn">◎ Avatar</button>
+        </div>
+        <div class="photo-mode-row" id="photoModeRow" style="display:none;margin-top:6px">
+          <span style="font-size:8px;color:var(--text2);align-self:center;font-family:'JetBrains Mono',monospace">MODUS:</span>
+          <button class="pmode-btn on" id="pmode-photo" onclick="setPhotoMode('photo')">📷 Foto</button>
+          <button class="pmode-btn" id="pmode-pixel" onclick="setPhotoMode('pixel')">⬛ Pixel</button>
+          <button class="pmode-btn" id="pmode-qr" onclick="setPhotoMode('qr')">QR</button>
+        </div>
+        <div id="noPhotoOpts" style="margin-top:8px;display:none">
+          <div style="font-size:8px;color:var(--text2);margin-bottom:5px;letter-spacing:1px;text-transform:uppercase;font-family:'JetBrains Mono',monospace">Avatar-Stil / Style</div>
+          <div style="display:flex;gap:5px;flex-wrap:wrap" id="avGrid"></div>
         </div>
       </div>
       <input type="file" id="photoInp" style="display:none" accept="image/*" onchange="photoSet(event)">
@@ -410,10 +538,19 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
     </div>
     <div class="fld"><label id="lbl-hl">Highlight-Zitat</label><input id="i-hl" placeholder="Die beste Architektur ist die, die man nicht sieht." oninput="lr()"></div>
     <div class="fld"><label id="lbl-avail">Verfügbarkeit / Status</label><input id="i-avail" placeholder="Ab sofort verfügbar · Vollzeit · Remote-freundlich" oninput="lr()"></div>
+    <div class="trans-bar" id="trans-bar">
+      <div class="trans-hdr">
+        <div class="trans-title">🌐 Auto-Übersetzung · Auto-Translation · الترجمة التلقائية</div>
+        <button class="btn btn-o btn-s" onclick="document.getElementById('trans-bar').classList.remove('on')" style="font-size:8px;padding:2px 6px">✕</button>
+      </div>
+      <div class="trans-st" id="trans-st">Klicke "Übersetzen" um alle Texte automatisch in DE, EN und AR zu übersetzen.</div>
+      <div class="trans-lang-row" id="trans-lang-row"></div>
+    </div>
     <div class="stnav">
       <button class="btn btn-o" onclick="goStep(0)">← Zurück</button>
       <button class="btn btn-g" onclick="goStep(2)">Weiter →</button>
       <button class="btn btn-o btn-s" onclick="aiPolish()" style="margin-left:auto">✨ KI verbessern</button>
+      <button class="btn btn-bl btn-s" onclick="autoTranslateAll()" title="Alle Texte automatisch in DE/EN/AR übersetzen">🌐 Übersetzen</button>
     </div>
   </div>
 
@@ -658,6 +795,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
 <!-- EXPORT -->
 <section class="scr" id="s2">
   <div class="exp-inner">
+    <div class="exp-lang-note">🌐 Dein Portfolio enthält alle 3 Sprachen — Arbeitgeber können DE / EN / AR selbst wählen. · Your portfolio includes 3 languages. · ملفك يحتوي على ٣ لغات.</div>
     <div class="exp-hdr">
       <span class="exp-icon">✦</span>
       <h2 style="font-family:'Playfair Display',serif;font-size:28px;font-weight:800;margin-bottom:7px" id="exp-h2">Deine Bewerbungsmappe ist bereit.</h2>
@@ -848,9 +986,151 @@ function setPrevTab(btn,mode){
   else lr();
 }
 
-// PHOTO
-function photoSet(e){var f=e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(ev){D.photo=ev.target.result;document.getElementById('photoRing').innerHTML='<img src="'+D.photo+'" style="width:100%;height:100%;object-fit:cover">';document.getElementById('photoClearBtn').style.display='inline';lr();};r.readAsDataURL(f);}
-function clearPhoto(){D.photo=null;document.getElementById('photoRing').innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>';document.getElementById('photoClearBtn').style.display='none';lr();}
+// PHOTO — enhanced with modes & no-border
+var photoMode='photo', avatarChoice='initials';
+var AVATAR_STYLES=[
+  {id:'initials',label:'Initialen',fn:function(fn,ln,ac){return '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="ag"><stop offset="0%" stop-color="'+ac+'22"/><stop offset="100%" stop-color="'+ac+'08"/></radialGradient></defs><circle cx="50" cy="50" r="50" fill="url(#ag)"/><text x="50" y="63" text-anchor="middle" font-family="Playfair Display,Georgia,serif" font-size="38" font-weight="800" fill="'+ac+'">'+((fn[0]||'')+(ln[0]||'')).toUpperCase()+'</text></svg>';}},
+  {id:'geo',label:'Geo',fn:function(fn,ln,ac){var s=ac;return '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50" fill="'+s+'18"/><polygon points="50,12 88,75 12,75" fill="none" stroke="'+s+'" stroke-width="2" opacity=".6"/><circle cx="50" cy="50" r="18" fill="'+s+'30"/><text x="50" y="55" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="11" fill="'+s+'" font-weight="700">'+((fn[0]||'')+(ln[0]||'')).toUpperCase()+'</text></svg>';}},
+  {id:'code',label:'&lt;/&gt;',fn:function(fn,ln,ac){return '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" rx="0" fill="#0a0e08"/><text x="50" y="45" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="12" fill="'+ac+'" opacity=".5">&lt;dev&gt;</text><text x="50" y="60" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="22" fill="'+ac+'" font-weight="700">'+((fn[0]||'')+(ln[0]||'')).toUpperCase()+'</text><text x="50" y="73" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="10" fill="'+ac+'" opacity=".4">/&gt;</text></svg>';}},
+  {id:'wave',label:'Wave',fn:function(fn,ln,ac){return '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50" fill="'+ac+'12"/><path d="M10,50 Q25,30 40,50 Q55,70 70,50 Q85,30 90,50" stroke="'+ac+'" stroke-width="2.5" fill="none" opacity=".7"/><text x="50" y="70" text-anchor="middle" font-family="Playfair Display,serif" font-size="22" fill="'+ac+'" font-weight="800">'+((fn[0]||'')+(ln[0]||'')).toUpperCase()+'</text></svg>';}}
+];
+
+function triggerPhotoClick(){document.getElementById('photoInp').click();}
+
+function photoSet(e){
+  var f=e.target.files[0];if(!f)return;
+  var r=new FileReader();
+  r.onload=function(ev){
+    D.photo=ev.target.result;
+    var ring=document.getElementById('photoRing');
+    ring.innerHTML='<img src="'+D.photo+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;filter:contrast(1.04) saturate(1.08)">';
+    ring.style.border='none';
+    ring.style.display='flex';
+    document.getElementById('photoClearBtn').style.display='inline';
+    document.getElementById('photoModeRow').style.display='flex';
+    document.getElementById('noPhotoOpts').style.display='none';
+    photoMode='photo';
+    initPixelCanvas(D.photo);
+    lr();
+  };
+  r.readAsDataURL(f);
+}
+
+function clearPhoto(){
+  D.photo=null;
+  photoMode='photo';
+  var ring=document.getElementById('photoRing');
+  ring.innerHTML='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>';
+  ring.style.border='2px dashed var(--hr)';
+  ring.style.display='flex';
+  document.getElementById('photoClearBtn').style.display='none';
+  document.getElementById('photoModeRow').style.display='none';
+  document.getElementById('pixelCanvas').style.display='none';
+  document.getElementById('qrPreview').style.display='none';
+  document.getElementById('avatarBig').style.display='none';
+  lr();
+}
+
+function setPhotoMode(m){
+  photoMode=m;
+  document.querySelectorAll('.pmode-btn').forEach(function(b){b.classList.remove('on');});
+  var btn=document.getElementById('pmode-'+m);if(btn)btn.classList.add('on');
+  var ring=document.getElementById('photoRing');
+  var px=document.getElementById('pixelCanvas');
+  var qr=document.getElementById('qrPreview');
+  ring.style.display='none'; px.style.display='none'; qr.style.display='none';
+  if(m==='photo'){ring.style.display='flex';}
+  else if(m==='pixel'){px.style.display='block';initPixelCanvas(D.photo);}
+  else if(m==='qr'){qr.style.display='block';buildQRPreview();}
+}
+
+function showNoPhotoOpts(){
+  var el=document.getElementById('noPhotoOpts');
+  el.style.display=el.style.display==='none'?'block':'none';
+  if(el.style.display==='block')renderAvatarGrid();
+}
+
+function renderAvatarGrid(){
+  var grid=document.getElementById('avGrid');if(!grid)return;
+  grid.innerHTML=AVATAR_STYLES.map(function(av){
+    var svg=av.fn(D.fn||'?',D.ln||'?',accent);
+    return '<div title="'+av.label+'" onclick="pickAvatar(\''+av.id+'\')" style="width:40px;height:40px;border-radius:50%;overflow:hidden;cursor:pointer;border:2px solid '+(avatarChoice===av.id?accent:'var(--hr)')+';transition:all .2s">'+svg+'</div>';
+  }).join('');
+}
+
+function pickAvatar(id){
+  avatarChoice=id;
+  var av=AVATAR_STYLES.find(function(a){return a.id===id;});if(!av)return;
+  var svg=av.fn(D.fn||'?',D.ln||'?',accent);
+  var ring=document.getElementById('photoRing');
+  ring.innerHTML=svg;
+  ring.style.border='none';
+  renderAvatarGrid();
+  lr();
+}
+
+// PIXEL CANVAS DISTORTION EFFECT (like Tailwind CSS website)
+var pixelAnimFrame=null;
+function initPixelCanvas(src){
+  var cv=document.getElementById('pixelCanvas');if(!cv||!src)return;
+  var ctx=cv.getContext('2d');
+  var img=new Image();
+  img.crossOrigin='anonymous';
+  img.onload=function(){
+    var mx=30,my=30,hovering=false;
+    function draw(){
+      var W=cv.width,H=cv.height;
+      // Calculate pixel block size based on mouse proximity to center
+      var dist=Math.sqrt(Math.pow(mx-W/2,2)+Math.pow(my-H/2,2));
+      var maxDist=W*0.7;
+      var blockSize=hovering?Math.max(1,Math.round(1+(dist/maxDist)*14)):3;
+      ctx.clearRect(0,0,W,H);
+      // Draw image pixelated
+      var offW=Math.ceil(W/blockSize),offH=Math.ceil(H/blockSize);
+      var off=document.createElement('canvas');off.width=offW;off.height=offH;
+      var octx=off.getContext('2d');
+      octx.drawImage(img,0,0,offW,offH);
+      ctx.imageSmoothingEnabled=false;
+      ctx.drawImage(off,0,0,W,H);
+      // Clip to circle
+      ctx.globalCompositeOperation='destination-in';
+      ctx.beginPath();ctx.arc(W/2,H/2,W/2,0,Math.PI*2);ctx.fill();
+      ctx.globalCompositeOperation='source-over';
+    }
+    cv.addEventListener('mousemove',function(e){
+      var r=cv.getBoundingClientRect();
+      mx=(e.clientX-r.left)*(cv.width/r.width);
+      my=(e.clientY-r.top)*(cv.height/r.height);
+      hovering=true;draw();
+    });
+    cv.addEventListener('mouseleave',function(){
+      hovering=false;
+      // Animate back to smooth
+      var steps=0;
+      function smooth(){
+        draw();steps++;
+        if(steps<20&&hovering===false)requestAnimationFrame(smooth);
+      }
+      smooth();
+    });
+    draw();
+  };
+  img.src=src;
+}
+
+// QR PREVIEW (using Google Charts API with fallback inline)
+function buildQRPreview(){
+  var qr=document.getElementById('qrPreview');if(!qr)return;
+  var text=D.email||D.website||D.github||D.linkedin||(D.fn+' '+D.ln).trim()||'portfolio';
+  text=text.replace(/^https?:\/\//,'');
+  var url='https://api.qrserver.com/v1/create-qr-code/?size=52x52&data='+encodeURIComponent(text)+'&bgcolor=transparent&color=16a085&qzone=1';
+  qr.innerHTML='<img src="'+url+'" width="52" height="52" style="border-radius:50%;object-fit:contain" onerror="this.parentElement.innerHTML=buildSVGQR()">';
+}
+function buildSVGQR(){
+  // Simple 5x5 pattern placeholder when API unavailable
+  var ac=accent.replace('#','');
+  return '<svg viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg" style="width:52px;height:52px"><rect width="52" height="52" rx="4" fill="#'+ac+'15"/><rect x="8" y="8" width="12" height="12" rx="1" fill="#'+ac+'"/><rect x="32" y="8" width="12" height="12" rx="1" fill="#'+ac+'"/><rect x="8" y="32" width="12" height="12" rx="1" fill="#'+ac+'"/><rect x="22" y="22" width="8" height="8" rx="1" fill="#'+ac+'" opacity=".7"/><rect x="32" y="28" width="4" height="4" fill="#'+ac+'"/><rect x="38" y="34" width="4" height="4" fill="#'+ac+'"/><rect x="28" y="38" width="4" height="4" fill="#'+ac+'"/></svg>';
+}
 
 // VARIANTS
 function toggleVariants(){
@@ -1324,7 +1604,14 @@ function buildPortfolio(full){
   if(fo[fontChoice]){c.serif=fo[fontChoice].serif;c.sans=fo[fontChoice].sans;}
   var bg=darkMode?c.bg:'#f4f1ec',txt=darkMode?c.text:'#0d0d12',txt2=darkMode?c.text2:'#5a5248',hr=darkMode?c.hr:'rgba(13,13,18,.08)',bg2=darkMode?c.bg2:'#ebe6dd',bg3=darkMode?c.bg3:'#ddd8ce';
   var arFont=isAr?",'Noto Sans Arabic',sans-serif":'';
-  var avatar=D.photo?'<img src="'+D.photo+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">':'<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50" fill="'+ac+'18"/><text x="50" y="60" text-anchor="middle" font-family="Georgia,serif" font-size="38" font-weight="700" fill="'+ac+'">'+((D.fn[0]||'')+(D.ln[0]||'')).toUpperCase()+'</text></svg>';
+  // Use chosen avatar style or photo
+  var avatar;
+  if(D.photo){
+    avatar='<img src="'+D.photo+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;filter:contrast(1.04) saturate(1.08);image-rendering:-webkit-optimize-contrast">';
+  } else {
+    var avStyle=AVATAR_STYLES.find(function(a){return a.id===avatarChoice;})||AVATAR_STYLES[0];
+    avatar=avStyle.fn(D.fn||'?',D.ln||'?',ac);
+  }
 
   // Skills
   var skH='';
@@ -1393,7 +1680,7 @@ function buildPortfolio(full){
   '.btnf.fill{background:'+ac+';color:'+bg+';border:none}.btnf.fill:hover{filter:brightness(1.1);transform:translateY(-2px);box-shadow:0 8px 26px '+ac+'40}'+
   '.btnf.line{background:transparent;color:'+txt+';border:1px solid '+hr+'}.btnf.line:hover{border-color:'+ac+'88;color:'+ac+'}'+
   '.hphoto{position:absolute;'+(isAr?'left':'right')+':8vw;bottom:0;width:clamp(130px,17vw,255px);height:clamp(170px,25vw,350px);opacity:0;animation:fi 1s 1.3s both}'+
-  '.hphoto-ring{width:100%;height:100%;border-radius:3px;overflow:hidden;border:1px solid '+hr+';box-shadow:0 24px 64px rgba(0,0,0,.32)}'+
+  '.hphoto-ring{width:100%;height:100%;border-radius:50%;overflow:hidden;box-shadow:0 16px 56px rgba(0,0,0,.28)}'+
   '.hphoto-ring img,.hphoto-ring svg{width:100%;height:100%;object-fit:cover}'+
   '.scroll{position:absolute;bottom:26px;'+(isAr?'right':'left')+':10vw;display:flex;align-items:center;gap:9px;opacity:0;animation:fi 1s 1.7s both;font-size:8px;letter-spacing:3px;text-transform:uppercase;color:'+txt2+';font-family:'+c.mono+'}'+
   '.scroll-ln{width:32px;height:1px;background:'+hr+';position:relative;overflow:hidden}.scroll-ln::after{content:"";position:absolute;left:-100%;top:0;width:100%;height:100%;background:'+ac+';animation:scan 2s ease-in-out infinite}@keyframes scan{0%{left:-100%}100%{left:200%}}'+
@@ -1421,7 +1708,12 @@ function buildPortfolio(full){
   '@keyframes fi{from{opacity:0}to{opacity:1}}@keyframes slideUp{from{transform:translateY(105%)}to{transform:none}}'+
   '@media print{nav,.scroll,.hphoto{display:none!important}.sec{break-inside:avoid}.hero{min-height:auto;padding:48px 32px}}'+
   '@media(max-width:768px){.hphoto{display:none}.nlinks{display:none}nav{padding:13px 16px}.sec{padding:56px 6vw}.hero{padding:84px 6vw 52px}}'+
+  '.lang-float{position:fixed;bottom:22px;'+(isAr?'left':'right')+':22px;z-index:500;display:flex;gap:3px;background:'+bg2+';border:1px solid '+hr+';border-radius:6px;padding:4px;box-shadow:0 8px 28px rgba(0,0,0,.35);opacity:0;animation:fi .8s 2s both}'+
+  '.lf-btn{font-size:9px;font-family:'+c.mono+';padding:5px 10px;border:1px solid transparent;border-radius:4px;background:transparent;color:'+txt2+';cursor:pointer;transition:all .18s;letter-spacing:1px}'+
+  '.lf-btn:hover,.lf-btn.on{background:'+ac+';color:'+bg+';border-color:'+ac+'}'+
   '</style></head><body>'+
+  // Embed all language translations as JSON data for employer lang switcher
+  '<script>var _T={de:'+JSON.stringify(Object.keys(D_translations.de||{}).length?D_translations.de:{fn:D.fn,ln:D.ln,title:D.title,bio:D.bio,tagline:D.tagline,availability:D.availability})+',en:'+JSON.stringify(Object.keys(D_translations.en||{}).length?D_translations.en:{fn:D.fn,ln:D.ln,title:D.title,bio:D.bio,tagline:D.tagline,availability:D.availability})+',ar:'+JSON.stringify(Object.keys(D_translations.ar||{}).length?D_translations.ar:{fn:D.fn,ln:D.ln,title:D.title,bio:D.bio,tagline:D.tagline,availability:D.availability})+'};var _CL="'+lang+'";<\/script>'+
   '<nav><div class="nlogo">'+name+'</div><div class="nlinks">'+
   (D.bio?'<a href="#sa">'+L.about+'</a>':'')+
   (allSkills.length?'<a href="#ssk">'+L.skills+'</a>':'')+
@@ -1432,9 +1724,9 @@ function buildPortfolio(full){
   '<section id="sh" class="hero"><div class="hero-bg"></div><div class="hcontent">'+
   badge+
   '<h1 class="hname" data-text="'+name+'"><span><span style="animation-delay:.3s">'+D.fn+'</span></span><span><span class="last" style="animation-delay:.45s">'+D.ln+'</span></span></h1>'+
-  '<div class="httl">'+D.title+'</div>'+
-  (D.tagline?'<div class="htag">&ldquo;'+D.tagline+'&rdquo;</div>':'')+
-  (D.availability?'<div class="havail"><div class="avdot"></div>'+D.availability+'</div>':'')+
+  '<div class="httl" id="_title">'+D.title+'</div>'+
+  (D.tagline?'<div class="htag" id="_tag">&ldquo;'+D.tagline+'&rdquo;</div>':'')+
+  (D.availability?'<div class="havail"><div class="avdot"></div><span id="_avail">'+D.availability+'</span></div>':'')+
   '<div class="hcta">'+
   (cts[0]?'<a href="'+cts[0].h+'"><button class="btnf fill">'+L.ctaContact+'</button></a>':'')+
   (D.projects.length?'<button class="btnf line" onclick="document.getElementById(\'sp\').scrollIntoView({behavior:\'smooth\'})">'+L.ctaProjects+'</button>':'')+
@@ -1442,21 +1734,176 @@ function buildPortfolio(full){
   '<div class="hphoto"><div class="hphoto-ring">'+avatar+'</div></div>'+
   '<div class="scroll">'+L.scroll+'<div class="scroll-ln"></div></div>'+
   '</section>'+
-  (D.bio?'<section id="sa" class="sec"><div class="slbl">'+L.about+'</div><div class="sttl">'+L.abt+'</div><div class="biotext rv">'+D.bio+'</div>'+(D.highlight?'<div class="hlblock rv">&ldquo;'+D.highlight+'&rdquo;</div>':'')+'</section>':'')+
+  (D.bio?'<section id="sa" class="sec"><div class="slbl">'+L.about+'</div><div class="sttl">'+L.abt+'</div><div class="biotext rv" id="_bio">'+D.bio+'</div>'+(D.highlight?'<div class="hlblock rv">&ldquo;'+D.highlight+'&rdquo;</div>':'')+'</section>':'')+
   (allSkills.length?'<section id="ssk" class="sec"><div class="slbl">'+L.skills+'</div><div class="sttl">'+L.skl+'</div><div class="sk-cloud">'+skH+'</div></section>':'')+
   (D.projects.length?'<section id="sp" class="sec"><div class="slbl">'+L.proj+'</div><div class="sttl">'+L.prj+'</div><div class="pgrid">'+prH+'</div></section>':'')+
   ((D.experience.length||D.education.length)?'<section id="sc" class="sec"><div class="slbl">'+L.career+'</div><div class="sttl">'+L.car+'</div><div class="tlwrap">'+expH+eduH+courseH+awardsH+'</div>'+(interestH||'')+'</section>':'')+
   testH+
   (cts.length?'<section id="sct" class="sec"><div class="slbl">'+L.contact+'</div><div class="sttl">'+L.cnt+'</div><div class="ctgrid">'+ctH+'</div></section>':'')+
   '<footer><span>'+name+'</span><span>'+D.title+(D.location?' · '+D.location:'')+'</span><span>'+L.footerBy+'</span></footer>'+
-  '<script>(function(){var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add("vis")});},{threshold:.08});document.querySelectorAll(".rv").forEach(function(el){obs.observe(el)});})();<\/script>'+
+  // Floating employer language picker
+  '<div class="lang-float" id="lfp">'+
+    '<button class="lf-btn'+(lang==='de'?' on':'')+'" onclick="switchPLang(\'de\',this)" title="Deutsch">DE</button>'+
+    '<button class="lf-btn'+(lang==='en'?' on':'')+'" onclick="switchPLang(\'en\',this)" title="English">EN</button>'+
+    '<button class="lf-btn'+(lang==='ar'?' on':'')+'" onclick="switchPLang(\'ar\',this)" title="العربية">AR</button>'+
+  '</div>'+
+  '<script>(function(){'+
+    'var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add("vis")});},{threshold:.08});'+
+    'document.querySelectorAll(".rv").forEach(function(el){obs.observe(el)});'+
+    'window.switchPLang=function(l,btn){'+
+      'document.querySelectorAll(".lf-btn").forEach(function(b){b.classList.remove("on")});'+
+      'if(btn)btn.classList.add("on");'+
+      'document.documentElement.setAttribute("dir",l==="ar"?"rtl":"ltr");'+
+      'document.documentElement.setAttribute("lang",l);'+
+      'var t=_T[l]||{};'+
+      'if(t.bio){var el=document.getElementById("_bio");if(el)el.textContent=t.bio;}'+
+      'if(t.title){var el2=document.getElementById("_title");if(el2)el2.textContent=t.title;}'+
+      'if(t.tagline){var el3=document.getElementById("_tag");if(el3)el3.textContent="\u201c"+t.tagline+"\u201d";}'+
+      'if(t.availability){var el4=document.getElementById("_avail");if(el4)el4.textContent=t.availability;}'+
+    '};'+
+  '})();<\/script>'+
   '</body></html>';
 }
 
+// ═══════════════════════════════════════════════════════════════════
+// ATS SATIRICAL SCANNER
+// ═══════════════════════════════════════════════════════════════════
+var ATS_CATEGORIES=[
+  {n:'Haarvolumen-Index',en:'Hair Volume Index',ar:'مؤشر حجم الشعر'},
+  {n:'Krawattensymmetrie',en:'Tie Symmetry',ar:'تناسق ربطة العنق'},
+  {n:'Lächel-Authentizität',en:'Smile Authenticity',ar:'أصالة الابتسامة'},
+  {n:'Hintergrund-Professionalität',en:'Background Professionalism',ar:'احترافية الخلفية'},
+  {n:'Blickkontakt-Stärke',en:'Eye Contact Intensity',ar:'شدة التواصل البصري'},
+  {n:'Kieferlinie-Konfidenz',en:'Jawline Confidence™',ar:'ثقة خط الفك™'},
+  {n:'Augenbrauen-ATS-Score',en:'Eyebrow ATS Score',ar:'نقاط الحاجبين'},
+  {n:'Kragenstärke-Rating',en:'Collar Strength Rating',ar:'تقييم قوة الياقة'},
+  {n:'Photogenie-Koeffizient',en:'Photogenic Coefficient',ar:'معامل التصوير'},
+  {n:'KI-Aura-Analyse',en:'AI Aura Analysis™',ar:'تحليل الهالة الذكاء'},
+];
+var ATS_SCAN_LOGS_DE=[
+  '> Initialisiere FOLIO·SCAN™ v4.2.0...',
+  '> Lade neuronales Gesichtsanalyse-Modell (GPT-Jaw-3)...',
+  '> Berechne Kieferlinie-Konfidenz-Score...',
+  '> Analysiere Haarvolumen-Index™...',
+  '> Krawattensymmetrie: Prüfung läuft...',
+  '> Pixelbasierte Aura-Extraktion...',
+  '> Korreliere mit Datenbank von 4,2 Mrd. Bewerberfotografien...',
+  '> Wende proprietären ATS-Algorithmus an...',
+  '> Finale Gesamtwertung wird berechnet...',
+  '> ✓ Analyse abgeschlossen — Ergebnis bereit.'
+];
+
+function showATS(){
+  var overlay=document.getElementById('ats-overlay');
+  overlay.classList.add('on');
+  // Show thumb if photo exists
+  var thumb=document.getElementById('ats-thumb');
+  if(D.photo){
+    thumb.innerHTML='<img src="'+D.photo+'" style="width:100%;height:100%;object-fit:cover">';
+    document.getElementById('ats-noimg').style.display='none';
+    document.getElementById('ats-run-btn').style.display='inline';
+  } else {
+    thumb.innerHTML='<svg width="56" height="56" viewBox="0 0 56 56" fill="none"><rect width="56" height="56" fill="rgba(22,160,133,.1)"/><circle cx="28" cy="22" r="10" fill="rgba(22,160,133,.3)"/><path d="M10 50c0-9.9 8.1-18 18-18s18 8.1 18 18" fill="rgba(22,160,133,.3)"/></svg>';
+    document.getElementById('ats-noimg').style.display='block';
+    document.getElementById('ats-run-btn').style.display='none';
+  }
+  // Reset state
+  document.getElementById('ats-prog').style.display='none';
+  document.getElementById('ats-log').style.display='none';
+  document.getElementById('ats-results').style.display='none';
+}
+function closeATS(e){
+  if(e&&e.target!==document.getElementById('ats-overlay'))return;
+  document.getElementById('ats-overlay').classList.remove('on');
+}
+async function runATSScan(){
+  var btn=document.getElementById('ats-run-btn');
+  btn.disabled=true;btn.textContent='⟳ Analysiere...';
+  var prog=document.getElementById('ats-prog');
+  var logEl=document.getElementById('ats-log');
+  var results=document.getElementById('ats-results');
+  prog.style.display='block';logEl.style.display='block';results.style.display='none';
+  logEl.innerHTML='';
+
+  // Animated log + progress
+  for(var i=0;i<ATS_SCAN_LOGS_DE.length;i++){
+    await new Promise(function(res){setTimeout(res,200+Math.random()*200);});
+    var line=document.createElement('div');
+    line.style.cssText='color:var(--mint);animation:fu .3s both';
+    line.textContent=ATS_SCAN_LOGS_DE[i];
+    logEl.appendChild(line);logEl.scrollTop=logEl.scrollHeight;
+    document.getElementById('ats-prog-bar').style.width=((i+1)/ATS_SCAN_LOGS_DE.length*100)+'%';
+  }
+
+  // Generate satirical results
+  var overall=Math.floor(72+Math.random()*25);
+  var cats=ATS_CATEGORIES.slice(0,6).map(function(c){
+    return {name:c.n,val:Math.floor(55+Math.random()*43),color:['#16a085','#00E5A0','#60A5FA','#A855F7','#f59e0b','#8F9790'][Math.floor(Math.random()*6)]};
+  });
+
+  // Show results
+  document.getElementById('ats-big-num').textContent=overall;
+  var bigLbl=document.getElementById('ats-big-lbl');
+  bigLbl.textContent=overall>=90?'HERAUSRAGEND™':overall>=80?'STARK™':overall>=70?'SOLIDE™':'ENTWICKLUNGSPOTENZIAL™';
+  document.getElementById('ats-cats').innerHTML=cats.map(function(c){
+    return '<div class="ats-cat"><div class="ats-cat-name">'+c.name+'</div><div class="ats-cat-bar"><div class="ats-cat-fill" style="width:'+c.val+'%;background:'+c.color+'"></div></div><div class="ats-cat-val">'+c.val+'/100</div></div>';
+  }).join('');
+  prog.style.display='none';
+  results.style.display='block';
+  btn.disabled=false;btn.textContent='🔬 Neu analysieren';
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// AUTO-TRANSLATE — übersetzt alle Texte in DE/EN/AR via Claude API
+// ═══════════════════════════════════════════════════════════════════
+var D_translations={de:{},en:{},ar:{}};
+async function autoTranslateAll(){
+  syncD();
+  var bar=document.getElementById('trans-bar');
+  var st=document.getElementById('trans-st');
+  var row=document.getElementById('trans-lang-row');
+  bar.classList.add('on');
+  st.textContent='⟳ Übersetze alle Texte in DE, EN und AR...';
+  row.innerHTML='<span class="trans-tag pending">DE ⟳</span><span class="trans-tag pending">EN ⟳</span><span class="trans-tag pending">AR ⟳</span>';
+
+  var payload={
+    fn:D.fn, ln:D.ln, title:D.title, tagline:D.tagline, bio:D.bio,
+    highlight:D.highlight, availability:D.availability,
+    projects:D.projects.map(function(p){return {name:p.name,desc:p.desc,impact:p.impact};}),
+    experience:D.experience.map(function(e){return {title:e.title,company:e.company,bullets:e.bullets,description:e.description};})
+  };
+
+  var prompt='You are a professional translator. Translate all text fields to German (de), English (en), and Arabic (ar).\n\nInput JSON:\n'+JSON.stringify(payload,null,2)+'\n\nReturn ONLY valid JSON with this structure:\n{"de":{...same keys...},"en":{...same keys...},"ar":{...same keys...}}\n\nFor Arabic use RTL-appropriate phrasing. Translate values only, keep JSON structure identical. JSON ONLY, no markdown.';
+  try{
+    var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:2500,messages:[{role:'user',content:prompt}]})});
+    var data=await r.json();
+    if(data.error)throw new Error(data.error.message);
+    var raw=data.content.map(function(c){return c.text||'';}).join('').replace(/```json|```/g,'').trim();
+    var parsed=JSON.parse(raw);
+    D_translations=parsed;
+    // Apply current language to UI
+    var cur=D_translations[lang]||D_translations.de;
+    if(cur){
+      var map={fn:'i-fn',ln:'i-ln',title:'i-title',tagline:'i-tag',bio:'i-bio',highlight:'i-hl',availability:'i-avail'};
+      for(var k in map){var el=document.getElementById(map[k]);if(el&&cur[k])el.value=cur[k];}
+      syncD();
+    }
+    row.innerHTML='<span class="trans-tag ok">DE ✓</span><span class="trans-tag ok">EN ✓</span><span class="trans-tag ok">AR ✓</span>';
+    st.textContent='✓ Alle 3 Sprachen übersetzt — das Portfolio wird in allen Sprachen ausgegeben.';
+    lr();toast('✓ Übersetzungen für DE/EN/AR gespeichert');
+  }catch(err){
+    row.innerHTML='<span class="trans-tag err">Fehler</span>';
+    st.textContent='⚠️ '+err.message+' — Bitte nochmals versuchen.';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
 // INIT
 buildSwatches();
 try{var sv=localStorage.getItem('folio-vars');if(sv)variants=JSON.parse(sv);}catch(e){}
 applyUILang();
+// Init avatar grid on page load
+setTimeout(function(){renderAvatarGrid();},100);
 </script>
 </body>
 </html>
