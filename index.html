@@ -295,32 +295,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
 @keyframes fu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 @keyframes fi{from{opacity:0}to{opacity:1}}
 
-/* ─── CROP MODAL ─── */
-.crop-modal{position:fixed;inset:0;z-index:500;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.72);backdrop-filter:blur(6px)}
-.crop-modal.on{display:flex;animation:fi .2s both}
-.crop-inner{background:var(--bg2);border:1px solid var(--hr);border-radius:12px;width:min(420px,96vw);overflow:hidden;display:flex;flex-direction:column}
-.crop-hdr{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--hr)}
-.crop-hdr-title{font-size:13px;font-weight:700;letter-spacing:.5px}
-.crop-hdr-close{background:none;border:none;color:var(--text2);cursor:pointer;font-size:18px;line-height:1;padding:2px 6px;border-radius:3px;transition:color .15s}
-.crop-hdr-close:hover{color:var(--text)}
-.crop-stage{position:relative;background:#000;overflow:hidden;cursor:grab;user-select:none;touch-action:none}
-.crop-stage:active{cursor:grabbing}
-#crop-canvas{display:block;width:100%;height:auto}
-.crop-controls{padding:14px 18px;display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--hr)}
-.crop-ctrl-row{display:flex;align-items:center;gap:10px}
-.crop-ctrl-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);width:52px;flex-shrink:0;font-family:'JetBrains Mono',monospace}
-.crop-slider{flex:1;-webkit-appearance:none;height:3px;border-radius:2px;background:var(--hr);outline:none;cursor:pointer}
-.crop-slider::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--teal);cursor:pointer;border:2px solid var(--bg2);box-shadow:0 0 0 1px var(--teal)}
-.crop-val{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--teal);width:36px;text-align:right;flex-shrink:0}
-.crop-rot-btns{display:flex;gap:5px}
-.crop-rot-btn{padding:4px 10px;font-size:10px;font-weight:600;border:1px solid var(--hr);border-radius:3px;background:var(--bg3);color:var(--text2);cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s;letter-spacing:.5px}
-.crop-rot-btn:hover{border-color:var(--teal);color:var(--teal)}
-.crop-actions{padding:12px 18px;display:flex;gap:8px;border-top:1px solid var(--hr)}
-.crop-reset-btn{padding:9px 14px;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;border:1px solid var(--hr);border-radius:3px;background:transparent;color:var(--text2);cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s}
-.crop-reset-btn:hover{border-color:var(--teal);color:var(--teal)}
-.crop-apply-btn{flex:1;padding:9px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border:none;border-radius:3px;background:var(--teal);color:#fff;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s}
-.crop-apply-btn:hover{background:#1abc9c;transform:translateY(-1px)}
-
+@media(max-width:900px){
   :root{--col-w:100%}
   .build{grid-template-columns:1fr}.br{display:none}.bl{padding:20px 16px}
   .land-wrap{padding:40px 20px}
@@ -838,39 +813,6 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
   </div>
 </section>
 
-<!-- ═══ CROP MODAL ═══ -->
-<div class="crop-modal" id="crop-modal">
-  <div class="crop-inner">
-    <div class="crop-hdr">
-      <span class="crop-hdr-title">✂ Foto zuschneiden</span>
-      <button class="crop-hdr-close" onclick="closeCrop()">✕</button>
-    </div>
-    <div class="crop-stage" id="crop-stage">
-      <canvas id="crop-canvas" width="380" height="380"></canvas>
-    </div>
-    <div class="crop-controls">
-      <div class="crop-ctrl-row">
-        <span class="crop-ctrl-label">Zoom</span>
-        <input class="crop-slider" type="range" id="crop-zoom" min="0.3" max="4" step="0.01" value="1" oninput="onCropSlider()">
-        <span class="crop-val" id="crop-zoom-val">100%</span>
-      </div>
-      <div class="crop-ctrl-row">
-        <span class="crop-ctrl-label">Drehen</span>
-        <input class="crop-slider" type="range" id="crop-rot" min="-180" max="180" step="1" value="0" oninput="onCropSlider()">
-        <span class="crop-val" id="crop-rot-val">0°</span>
-        <div class="crop-rot-btns">
-          <button class="crop-rot-btn" onclick="snapRot(-90)">↺ 90°</button>
-          <button class="crop-rot-btn" onclick="snapRot(90)">↻ 90°</button>
-        </div>
-      </div>
-    </div>
-    <div class="crop-actions">
-      <button class="crop-reset-btn" onclick="resetCrop()">↺ Reset</button>
-      <button class="crop-apply-btn" onclick="applyCrop()">✓ Übernehmen</button>
-    </div>
-  </div>
-</div>
-
 <script>
 // ═══════════════════════════════════════════════
 // STATE
@@ -911,187 +853,7 @@ var PROF_LABELS={
   other:{tech:'Fachkenntnisse & Tools'}
 };
 
-// ═══ CROP ENGINE ═══════════════════════════════
-var cropImg=null,cropOrigFile=null;
-var cropState={zoom:1,rot:0,offsetX:0,offsetY:0};
-var cropDrag={active:false,startX:0,startY:0,startOX:0,startOY:0};
-var CROP_SIZE=380; // canvas px
-var CROP_R=CROP_SIZE*0.42; // radius of crop circle
-
-function openCrop(dataUrl,file){
-  cropOrigFile=file;
-  cropImg=new Image();
-  cropImg.onload=function(){
-    resetCrop(true);
-    document.getElementById('crop-modal').classList.add('on');
-    drawCropCanvas();
-  };
-  cropImg.src=dataUrl;
-}
-function closeCrop(){
-  document.getElementById('crop-modal').classList.remove('on');
-}
-function resetCrop(silent){
-  // Fit image to fill crop circle on reset
-  var scale=Math.max(CROP_R*2/cropImg.width,CROP_R*2/cropImg.height)*1.0;
-  cropState={zoom:scale,rot:0,offsetX:0,offsetY:0};
-  var zEl=document.getElementById('crop-zoom');
-  var rEl=document.getElementById('crop-rot');
-  if(zEl)zEl.value=scale;
-  if(rEl)rEl.value=0;
-  updateCropVals();
-  if(!silent)drawCropCanvas();
-}
-function onCropSlider(){
-  cropState.zoom=parseFloat(document.getElementById('crop-zoom').value);
-  cropState.rot=parseFloat(document.getElementById('crop-rot').value);
-  updateCropVals();
-  drawCropCanvas();
-}
-function updateCropVals(){
-  var zv=document.getElementById('crop-zoom-val');
-  var rv=document.getElementById('crop-rot-val');
-  if(zv)zv.textContent=Math.round(cropState.zoom*100)+'%';
-  if(rv)rv.textContent=Math.round(cropState.rot)+'°';
-}
-function snapRot(deg){
-  cropState.rot=(cropState.rot+deg+360)%360;
-  if(cropState.rot>180)cropState.rot-=360;
-  var rEl=document.getElementById('crop-rot');
-  if(rEl)rEl.value=cropState.rot;
-  updateCropVals();
-  drawCropCanvas();
-}
-
-function drawCropCanvas(){
-  var cv=document.getElementById('crop-canvas');if(!cv||!cropImg)return;
-  var ctx=cv.getContext('2d');
-  var W=CROP_SIZE,H=CROP_SIZE,cx=W/2,cy=H/2;
-  ctx.clearRect(0,0,W,H);
-
-  // Draw image with pan+zoom+rotate
-  ctx.save();
-  ctx.translate(cx+cropState.offsetX,cy+cropState.offsetY);
-  ctx.rotate(cropState.rot*Math.PI/180);
-  ctx.scale(cropState.zoom,cropState.zoom);
-  ctx.drawImage(cropImg,-cropImg.width/2,-cropImg.height/2);
-  ctx.restore();
-
-  // Dark overlay with circular cutout
-  ctx.save();
-  ctx.fillStyle='rgba(0,0,0,.62)';
-  ctx.beginPath();
-  ctx.rect(0,0,W,H);
-  ctx.arc(cx,cy,CROP_R,0,Math.PI*2,true);
-  ctx.fill('evenodd');
-  // Teal crop ring
-  ctx.strokeStyle='#16a085';
-  ctx.lineWidth=2;
-  ctx.beginPath();
-  ctx.arc(cx,cy,CROP_R,0,Math.PI*2);
-  ctx.stroke();
-  // Grid lines inside circle
-  ctx.strokeStyle='rgba(22,160,133,.22)';
-  ctx.lineWidth=1;
-  [-CROP_R/3,0,CROP_R/3].forEach(function(o){
-    ctx.save();ctx.beginPath();
-    ctx.arc(cx,cy,CROP_R,0,Math.PI*2);ctx.clip();
-    ctx.beginPath();ctx.moveTo(cx+o,cy-CROP_R);ctx.lineTo(cx+o,cy+CROP_R);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(cx-CROP_R,cy+o);ctx.lineTo(cx+CROP_R,cy+o);ctx.stroke();
-    ctx.restore();
-  });
-  ctx.restore();
-}
-
-// ── Drag to pan ──────────────────────────────────
-(function(){
-  function getXY(e){
-    if(e.touches)return{x:e.touches[0].clientX,y:e.touches[0].clientY};
-    return{x:e.clientX,y:e.clientY};
-  }
-  function onDown(e){
-    var p=getXY(e);
-    cropDrag={active:true,startX:p.x,startY:p.y,startOX:cropState.offsetX,startOY:cropState.offsetY};
-    e.preventDefault();
-  }
-  function onMove(e){
-    if(!cropDrag.active)return;
-    var p=getXY(e);
-    cropState.offsetX=cropDrag.startOX+(p.x-cropDrag.startX);
-    cropState.offsetY=cropDrag.startOY+(p.y-cropDrag.startY);
-    drawCropCanvas();e.preventDefault();
-  }
-  function onUp(){cropDrag.active=false;}
-  document.addEventListener('DOMContentLoaded',function(){
-    var stage=document.getElementById('crop-stage');if(!stage)return;
-    stage.addEventListener('mousedown',onDown);
-    stage.addEventListener('touchstart',onDown,{passive:false});
-    window.addEventListener('mousemove',onMove);
-    window.addEventListener('touchmove',onMove,{passive:false});
-    window.addEventListener('mouseup',onUp);
-    window.addEventListener('touchend',onUp);
-    // Scroll to zoom
-    stage.addEventListener('wheel',function(e){
-      e.preventDefault();
-      var delta=e.deltaY>0?-0.06:0.06;
-      cropState.zoom=Math.max(0.3,Math.min(4,cropState.zoom+delta));
-      var zEl=document.getElementById('crop-zoom');if(zEl)zEl.value=cropState.zoom;
-      updateCropVals();drawCropCanvas();
-    },{passive:false});
-  });
-})();
-
-function applyCrop(){
-  var src=document.getElementById('crop-canvas');if(!src)return;
-  var OUT=800;
-  var out=document.createElement('canvas');
-  out.width=OUT;out.height=OUT;
-  var octx=out.getContext('2d');
-  // Extract crop circle from preview canvas → scale to 800×800
-  var dia=CROP_R*2;
-  var cx=CROP_SIZE/2,cy=CROP_SIZE/2;
-  octx.drawImage(src,cx-CROP_R,cy-CROP_R,dia,dia,0,0,OUT,OUT);
-  closeCrop();
-  compressAndSave(out,cropOrigFile);
-}
-
-function compressAndSave(canvas,file){
-  var TARGET_KB=150;
-  var quality=0.88;
-  var result=canvas.toDataURL('image/jpeg',quality);
-  while(result.length*0.75/1024>TARGET_KB&&quality>0.30){
-    quality=Math.round((quality-0.07)*100)/100;
-    result=canvas.toDataURL('image/jpeg',quality);
-  }
-  var originalKB=file?Math.round(file.size/1024):0;
-  var finalKB=Math.round(result.length*0.75/1024);
-  var savedPct=originalKB>0?Math.round((originalKB-finalKB)/originalKB*100):0;
-  D.photo=result;
-  // Update ring
-  var ring=document.getElementById('photoRing');
-  if(ring){
-    ring.innerHTML='<img src="'+D.photo+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block" alt="Profilbild">'+
-      '<div class="ph-overlay">✎</div>';
-    ring.style.border='2px solid rgba(22,160,133,.5)';
-  }
-  // Meta info
-  var meta=document.getElementById('photo-meta');
-  var metaTxt=document.getElementById('photo-meta-txt');
-  if(meta&&metaTxt){
-    var name=file?file.name:'Foto';
-    var comprTxt=savedPct>5
-      ?name+' · '+finalKB+'KB<span style="color:var(--teal);margin-left:7px;font-size:9px">↓ '+savedPct+'% kleiner</span>'
-      :name+' · '+finalKB+'KB';
-    metaTxt.innerHTML=comprTxt;
-    meta.style.display='flex';
-  }
-  var rst=document.getElementById('photo-reset');if(rst)rst.style.display='inline-block';
-  var hint=document.querySelector('.photo-hint');
-  if(hint)hint.textContent='Bild wird im Portfolio angezeigt. Zum Ändern erneut klicken.';
-  liveRender();
-}
-
-// ═══ PHOTO UPLOAD (opens crop modal) ════════════
+// ═══ MODE ═══
 function toggleMode(){
   darkMode=!darkMode;
   document.documentElement.setAttribute('data-mode',darkMode?'dark':'light');
@@ -1205,8 +967,85 @@ function setProf(p){
 function photoSet(e){
   var f=e.target.files[0];if(!f)return;
   if(!f.type.startsWith('image/')){alert('Bitte nur Bilddateien (JPG, PNG, WebP).');return;}
+
+  // Show loading state
+  var metaTxt=document.getElementById('photo-meta-txt');
+  var meta=document.getElementById('photo-meta');
+  if(meta&&metaTxt){metaTxt.textContent='⏳ Wird komprimiert...';meta.style.display='flex';}
+
+  var originalKB=Math.round(f.size/1024);
   var r=new FileReader();
-  r.onload=function(ev){openCrop(ev.target.result,f);};
+  r.onload=function(ev){
+    var img=new Image();
+    img.onload=function(){
+      // ── SCHRITT 1: Skalieren auf max 800px ──────────────────
+      var MAX=800;
+      var w=img.width, h=img.height;
+      if(w>MAX||h>MAX){
+        if(w>h){h=Math.round(h*MAX/w);w=MAX;}
+        else{w=Math.round(w*MAX/h);h=MAX;}
+      }
+      var cv=document.createElement('canvas');
+      cv.width=w;cv.height=h;
+      var ctx=cv.getContext('2d');
+
+      // Smooth downscaling (two-pass for large images)
+      if(img.width>MAX*1.5){
+        var tmp=document.createElement('canvas');
+        tmp.width=Math.round(img.width/2);
+        tmp.height=Math.round(img.height/2);
+        var tctx=tmp.getContext('2d');
+        tctx.drawImage(img,0,0,tmp.width,tmp.height);
+        ctx.drawImage(tmp,0,0,w,h);
+      }else{
+        ctx.drawImage(img,0,0,w,h);
+      }
+
+      // ── SCHRITT 2: Iterative Qualitätskomprimierung ──────────
+      var TARGET_KB=150;
+      var quality=0.88;
+      var result=cv.toDataURL('image/jpeg',quality);
+
+      // Reduce quality until under 150KB (each base64 char ≈ 0.75 bytes)
+      while(result.length*0.75/1024 > TARGET_KB && quality > 0.30){
+        quality=Math.round((quality-0.07)*100)/100;
+        result=cv.toDataURL('image/jpeg',quality);
+      }
+
+      var finalKB=Math.round(result.length*0.75/1024);
+      var savedKB=originalKB-finalKB;
+      var savedPct=originalKB>0?Math.round(savedKB/originalKB*100):0;
+
+      D.photo=result;
+
+      // Update ring preview
+      var ring=document.getElementById('photoRing');
+      if(ring){
+        ring.innerHTML='<img src="'+D.photo+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block" alt="Profilbild">'+
+          '<div class="ph-overlay">✎</div>';
+        ring.style.border='2px solid rgba(22,160,133,.5)';
+      }
+
+      // Meta line — show compression result
+      if(meta&&metaTxt){
+        var comprTxt=savedPct>5
+          ? f.name+' · '+finalKB+'KB'
+            +'<span style="color:var(--teal);margin-left:7px;font-size:9px">↓ '+savedPct+'% kleiner</span>'
+            +'<span style="color:var(--text2);margin-left:5px;font-size:9px">('+w+'×'+h+'px · Q'+Math.round(quality*100)+')</span>'
+          : f.name+' · '+finalKB+'KB'
+            +'<span style="color:var(--text2);margin-left:7px;font-size:9px">('+w+'×'+h+'px)</span>';
+        metaTxt.innerHTML=comprTxt;
+        meta.style.display='flex';
+      }
+
+      var rst=document.getElementById('photo-reset');
+      if(rst)rst.style.display='inline-block';
+      var hint=document.querySelector('.photo-hint');
+      if(hint)hint.textContent='Bild wird im Portfolio angezeigt. Zum Ändern erneut klicken.';
+      liveRender();
+    };
+    img.src=ev.target.result;
+  };
   r.readAsDataURL(f);
 }
 
