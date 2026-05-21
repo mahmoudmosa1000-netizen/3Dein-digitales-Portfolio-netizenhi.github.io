@@ -80,7 +80,29 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
 .btn-red:hover{background:#dc2626;transform:translateY(-2px)}
 .btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
 
-/* ─── BUILDER ─── */
+/* ─── SHAPE PREVIEW MODAL ─── */
+.spv-modal{position:fixed;inset:0;z-index:500;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.68);backdrop-filter:blur(8px)}
+.spv-modal.on{display:flex;animation:fi .2s both}
+.spv-box{background:var(--bg2);border:1px solid var(--hr);border-radius:12px;width:min(480px,96vw);overflow:hidden}
+.spv-hdr{padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--hr)}
+.spv-hdr-title{font-size:13px;font-weight:700}
+.spv-hdr-sub{font-size:10px;color:var(--text2);margin-top:2px;letter-spacing:.3px}
+.spv-close{background:none;border:none;color:var(--text2);cursor:pointer;font-size:18px;padding:2px 6px;transition:color .15s}
+.spv-close:hover{color:var(--text)}
+.spv-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:22px 20px}
+.spv-item{display:flex;flex-direction:column;align-items:center;gap:9px;cursor:pointer}
+.spv-thumb{width:90px;height:90px;background-size:cover;background-position:center;border:3px solid transparent;transition:border-color .2s,transform .2s,box-shadow .2s}
+.spv-thumb:hover{transform:scale(1.05)}
+.spv-item.sel .spv-thumb{border-color:var(--teal);box-shadow:0 0 0 3px rgba(22,160,133,.2)}
+.spv-item-lbl{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);font-family:'JetBrains Mono',monospace;transition:color .2s}
+.spv-item.sel .spv-item-lbl{color:var(--teal)}
+.spv-item.sel .spv-check{opacity:1}
+.spv-check{width:18px;height:18px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;opacity:0;transition:opacity .2s;flex-shrink:0}
+.spv-actions{padding:14px 20px;display:flex;gap:8px;border-top:1px solid var(--hr)}
+.spv-apply{flex:1;padding:10px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;border:none;border-radius:3px;background:var(--teal);color:#fff;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s}
+.spv-apply:hover{background:#1abc9c;transform:translateY(-1px)}
+.spv-cancel{padding:10px 18px;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;border:1px solid var(--hr);border-radius:3px;background:transparent;color:var(--text2);cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s}
+.spv-cancel:hover{border-color:var(--teal);color:var(--teal)}
 #s1{padding-top:58px}
 .build{display:grid;grid-template-columns:var(--col-w) 1fr;height:calc(100vh - 58px)}
 .bl{padding:28px 36px;overflow-y:auto;border-right:1px solid var(--hr)}
@@ -142,6 +164,17 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
 .ps-btn:hover{border-color:rgba(22,160,133,.4);color:var(--teal)}
 .ps-btn.sel{background:rgba(22,160,133,.1);border-color:var(--teal);color:var(--teal)}
 .ps-icon{font-size:11px;opacity:.7}
+/* Filter sliders */
+.ps-divider{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--teal);font-family:'JetBrains Mono',monospace;margin:12px 0 8px;padding-top:10px;border-top:1px solid var(--hr);opacity:.7}
+.ps-filter-row{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+.ps-filter-lbl{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--text2);width:58px;flex-shrink:0;font-family:'JetBrains Mono',monospace}
+.ps-filter-sl{flex:1;-webkit-appearance:none;height:3px;border-radius:2px;background:var(--hr);outline:none;cursor:pointer}
+.ps-filter-sl::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--teal);cursor:pointer;border:2px solid var(--bg2)}
+.ps-filter-val{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--teal);width:32px;text-align:right;flex-shrink:0}
+.ps-filter-rst{background:none;border:none;color:var(--text2);cursor:pointer;font-size:12px;padding:1px 4px;opacity:.5;transition:opacity .15s;flex-shrink:0}
+.ps-filter-rst:hover{opacity:1;color:var(--teal)}
+.ps-filter-reset-all{width:100%;padding:5px;font-size:10px;letter-spacing:1px;text-transform:uppercase;border:1px solid var(--hr);border-radius:3px;background:transparent;color:var(--text2);cursor:pointer;font-family:'Outfit',sans-serif;margin-top:4px;margin-bottom:4px;transition:all .15s}
+.ps-filter-reset-all:hover{border-color:var(--teal);color:var(--teal)}
 .tags-box{display:flex;flex-wrap:wrap;gap:5px;padding:8px 10px;background:var(--inp-bg);border:1px solid var(--inp-br);border-radius:3px;min-height:44px;cursor:text;transition:border-color .2s}
 .tags-box:focus-within{border-color:rgba(22,160,133,.6)}
 .chip{display:inline-flex;align-items:center;gap:4px;background:rgba(22,160,133,.1);border:1px solid rgba(22,160,133,.22);color:var(--teal);padding:3px 9px;border-radius:20px;font-size:11px;font-family:'JetBrains Mono',monospace}
@@ -414,6 +447,19 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
           <button class="btn btn-o btn-s" onclick="event.stopPropagation();document.getElementById('photoInp').click()" style="padding:5px 12px">Bild wählen</button>
           <button class="photo-reset" id="photo-reset" onclick="event.stopPropagation();clearPhoto()">✕ Zurücksetzen</button>
         </div>
+        <div class="photo-alt-wrap" id="photo-alt-wrap">
+          <div style="display:flex;align-items:center;gap:7px;margin-top:9px">
+            <span style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);font-family:'JetBrains Mono',monospace;flex-shrink:0">Alt-Text</span>
+            <input id="i-photo-alt" placeholder="Profilbild von Max Mustermann"
+              style="flex:1;padding:5px 9px;background:var(--inp-bg);border:1px solid var(--inp-br);border-radius:3px;color:var(--text);font-family:'Outfit',sans-serif;font-size:11px;outline:none;transition:border-color .2s"
+              oninput="D.photoAlt=this.value;liveRender()"
+              onfocus="this.style.borderColor='rgba(22,160,133,.6)'"
+              onblur="this.style.borderColor=''">
+          </div>
+          <div style="font-size:9px;color:var(--text2);margin-top:4px;line-height:1.5;opacity:.7">
+            ♿ Für Screen-Reader &amp; SEO — leer lässt automatisch den vollständigen Namen einsetzen.
+          </div>
+        </div>
       </div>
       <input type="file" id="photoInp" style="display:none" accept="image/*" onchange="photoSet(event)">
     </div>
@@ -460,6 +506,58 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
           <div class="toggle-sub">Hover über Foto → QR-Code mit Kontaktdaten</div>
         </div>
         <label class="toggle-sw"><input type="checkbox" id="photo-qr" onchange="liveRender()"><div class="toggle-track"><div class="toggle-thumb"></div></div></label>
+      </div>
+
+      <!-- SCHRITT 3: Bildkorrektur -->
+      <div class="ps-divider">Bildkorrektur</div>
+      <div class="ps-filter-row">
+        <span class="ps-filter-lbl">☀ Hell</span>
+        <input class="ps-filter-sl" type="range" id="pf-brightness" min="50" max="150" value="100" oninput="onFilterChange()">
+        <span class="ps-filter-val" id="pf-brightness-val">100%</span>
+        <button class="ps-filter-rst" onclick="resetFilter('pf-brightness',100)" title="Reset">↺</button>
+      </div>
+      <div class="ps-filter-row">
+        <span class="ps-filter-lbl">◑ Kontr</span>
+        <input class="ps-filter-sl" type="range" id="pf-contrast" min="50" max="200" value="100" oninput="onFilterChange()">
+        <span class="ps-filter-val" id="pf-contrast-val">100%</span>
+        <button class="ps-filter-rst" onclick="resetFilter('pf-contrast',100)" title="Reset">↺</button>
+      </div>
+      <div class="ps-filter-row">
+        <span class="ps-filter-lbl">❋ Sätt</span>
+        <input class="ps-filter-sl" type="range" id="pf-saturation" min="0" max="200" value="100" oninput="onFilterChange()">
+        <span class="ps-filter-val" id="pf-saturation-val">100%</span>
+        <button class="ps-filter-rst" onclick="resetFilter('pf-saturation',100)" title="Reset">↺</button>
+      </div>
+      <div class="ps-filter-row">
+        <span class="ps-filter-lbl">⟳ Schärfe</span>
+        <input class="ps-filter-sl" type="range" id="pf-blur" min="0" max="8" value="0" step="0.1" oninput="onFilterChange()">
+        <span class="ps-filter-val" id="pf-blur-val">0</span>
+        <button class="ps-filter-rst" onclick="resetFilter('pf-blur',0)" title="Reset">↺</button>
+      </div>
+      <button class="ps-filter-reset-all" onclick="resetAllFilters()">Alle Korrekturen zurücksetzen</button>
+
+      <!-- SCHRITT 4: Schwarz-Weiß & Duoton -->
+      <div class="ps-divider">Farbmodus</div>
+      <div class="ps-opts" id="ps-colormode">
+        <button class="ps-btn sel" onclick="setPhotoOpt('colormode','normal',this)">Normal</button>
+        <button class="ps-btn" onclick="setPhotoOpt('colormode','bw',this)">⬛ S/W</button>
+        <button class="ps-btn" onclick="setPhotoOpt('colormode','duotone',this)">◈ Duoton</button>
+        <button class="ps-btn" onclick="setPhotoOpt('colormode','sepia',this)">▦ Sepia</button>
+        <button class="ps-btn" onclick="setPhotoOpt('colormode','hue',this)">◉ Hue-Shift</button>
+      </div>
+      <div id="duotone-hint" style="display:none;font-size:10px;color:var(--text2);margin-top:6px;padding:7px 10px;background:var(--bg3);border-radius:4px;line-height:1.6">
+        Duoton verwendet die gewählte Akzentfarbe + Dunkel als Farbpaar.
+        Für andere Farbpaare → Akzentfarbe in Schritt 7 · Design ändern.
+      </div>
+
+      <!-- SCHRITT 7: Reveal-Animation beim Laden -->
+      <div class="ps-divider">Eingangs-Animation</div>
+      <div class="ps-opts" id="ps-reveal">
+        <button class="ps-btn sel" onclick="setPhotoOpt('reveal','none',this)">Keine</button>
+        <button class="ps-btn" onclick="setPhotoOpt('reveal','slideup',this)"><span class="ps-icon">↑</span>Slide-Up</button>
+        <button class="ps-btn" onclick="setPhotoOpt('reveal','pixel',this)"><span class="ps-icon">▒</span>Pixel</button>
+        <button class="ps-btn" onclick="setPhotoOpt('reveal','curtain',this)"><span class="ps-icon">▌</span>Curtain</button>
+        <button class="ps-btn" onclick="setPhotoOpt('reveal','zoom',this)"><span class="ps-icon">⊕</span>Zoom-In</button>
       </div>
     </div>
 
@@ -813,6 +911,45 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
   </div>
 </section>
 
+<!-- ═══ SHAPE PREVIEW MODAL ═══ -->
+<div class="spv-modal" id="spv-modal">
+  <div class="spv-box">
+    <div class="spv-hdr">
+      <div>
+        <div class="spv-hdr-title">📸 Foto-Form wählen</div>
+        <div class="spv-hdr-sub">Klicke auf eine Form — sofort in der Live-Vorschau sichtbar</div>
+      </div>
+      <button class="spv-close" onclick="closeShapePreview()">✕</button>
+    </div>
+    <div class="spv-grid" id="spv-grid">
+      <div class="spv-item sel" id="spv-circle" onclick="selectPreviewShape('circle',this)">
+        <div class="spv-thumb" id="spv-thumb-circle" style="border-radius:50%"></div>
+        <div class="spv-check">✓</div>
+        <span class="spv-item-lbl">Rund</span>
+      </div>
+      <div class="spv-item" id="spv-square" onclick="selectPreviewShape('square',this)">
+        <div class="spv-thumb" id="spv-thumb-square" style="border-radius:10px"></div>
+        <div class="spv-check">✓</div>
+        <span class="spv-item-lbl">Quadrat</span>
+      </div>
+      <div class="spv-item" id="spv-hex" onclick="selectPreviewShape('hex',this)">
+        <div class="spv-thumb" id="spv-thumb-hex" style="clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)"></div>
+        <div class="spv-check">✓</div>
+        <span class="spv-item-lbl">Hexagon</span>
+      </div>
+      <div class="spv-item" id="spv-diamond" onclick="selectPreviewShape('diamond',this)">
+        <div class="spv-thumb" id="spv-thumb-diamond" style="clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%)"></div>
+        <div class="spv-check">✓</div>
+        <span class="spv-item-lbl">Raute</span>
+      </div>
+    </div>
+    <div class="spv-actions">
+      <button class="spv-cancel" onclick="closeShapePreview()">Abbrechen</button>
+      <button class="spv-apply" onclick="applyShapePreview()">✓ Übernehmen &amp; weiter</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ═══════════════════════════════════════════════
 // STATE
@@ -820,7 +957,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
 var D = {
   fn:'',ln:'',title:'',tagline:'',bio:'',highlight:'',strengths:'',
   email:'',phone:'',github:'',linkedin:'',website:'',location:'',xing:'',extra:'',
-  awards:'',photo:null,profession:'it',
+  awards:'',photo:null,photoAlt:'',profession:'it',
   skills:{tech:[],soft:[],lang:[],cert:[]},
   projects:[],experience:[],education:[],
   coverLetter:'',cl_job:'',cl_company:'',cl_requirements:'',cl_tone:'formal',
@@ -831,7 +968,10 @@ var fontChoice='elegant',animChoice='reveal',animSpeed='normal',darkMode=true;
 var portfolioDarkMode=true;
 var itemCounter=0;
 // Photo appearance
-var photoShape='circle',photoBorder='none',photoAnim='none',photoQR=false;
+var photoShape='circle',photoBorder='none',photoAnim='none',photoQR=false,photoReveal='none';
+// Photo filters (Schritt 3 & 4)
+var photoFilters={brightness:100,contrast:100,saturation:100,blur:0};
+var photoColorMode='normal';
 
 var STEP_LABELS=['Import','Identität','Skills','Projekte','Karriere','Kontakt','KI-Tools','Design'];
 var STEP_COUNT=8;
@@ -905,7 +1045,12 @@ function resetAll(){
   // Reset cover letter result
   var clOut=document.getElementById('cl-output');if(clOut)clOut.value='';
   var clWrap=document.getElementById('cl-result-wrap');if(clWrap)clWrap.style.display='none';
-  // Reset style & anim to defaults
+  // Reset photo style options
+  photoShape='circle';photoBorder='none';photoAnim='none';photoColorMode='normal';photoReveal='none';
+  photoFilters={brightness:100,contrast:100,saturation:100,blur:0};
+  resetAllFilters();
+  document.querySelectorAll('.ps-opts .ps-btn').forEach(function(b){b.classList.remove('sel');});
+  document.querySelectorAll('#ps-shape .ps-btn,#ps-border .ps-btn,#ps-anim .ps-btn,#ps-colormode .ps-btn').forEach(function(b,i){if(i===0)b.classList.add('sel');});
   portfolioStyle='noir';accentColor='#16a085';fontChoice='elegant';animChoice='reveal';animSpeed='normal';
   setStyle('noir');setAccent('#16a085');setFont('elegant');setAnim('reveal');setSpeed('normal');
   setProf('it');
@@ -967,82 +1112,33 @@ function setProf(p){
 function photoSet(e){
   var f=e.target.files[0];if(!f)return;
   if(!f.type.startsWith('image/')){alert('Bitte nur Bilddateien (JPG, PNG, WebP).');return;}
-
-  // Show loading state
-  var metaTxt=document.getElementById('photo-meta-txt');
   var meta=document.getElementById('photo-meta');
+  var metaTxt=document.getElementById('photo-meta-txt');
   if(meta&&metaTxt){metaTxt.textContent='⏳ Wird komprimiert...';meta.style.display='flex';}
-
   var originalKB=Math.round(f.size/1024);
   var r=new FileReader();
   r.onload=function(ev){
     var img=new Image();
     img.onload=function(){
-      // ── SCHRITT 1: Skalieren auf max 800px ──────────────────
-      var MAX=800;
-      var w=img.width, h=img.height;
-      if(w>MAX||h>MAX){
-        if(w>h){h=Math.round(h*MAX/w);w=MAX;}
-        else{w=Math.round(w*MAX/h);h=MAX;}
-      }
-      var cv=document.createElement('canvas');
-      cv.width=w;cv.height=h;
+      var MAX=800,w=img.width,h=img.height;
+      if(w>MAX||h>MAX){if(w>h){h=Math.round(h*MAX/w);w=MAX;}else{w=Math.round(w*MAX/h);h=MAX;}}
+      var cv=document.createElement('canvas');cv.width=w;cv.height=h;
       var ctx=cv.getContext('2d');
-
-      // Smooth downscaling (two-pass for large images)
-      if(img.width>MAX*1.5){
-        var tmp=document.createElement('canvas');
-        tmp.width=Math.round(img.width/2);
-        tmp.height=Math.round(img.height/2);
-        var tctx=tmp.getContext('2d');
-        tctx.drawImage(img,0,0,tmp.width,tmp.height);
-        ctx.drawImage(tmp,0,0,w,h);
-      }else{
-        ctx.drawImage(img,0,0,w,h);
-      }
-
-      // ── SCHRITT 2: Iterative Qualitätskomprimierung ──────────
-      var TARGET_KB=150;
-      var quality=0.88;
-      var result=cv.toDataURL('image/jpeg',quality);
-
-      // Reduce quality until under 150KB (each base64 char ≈ 0.75 bytes)
-      while(result.length*0.75/1024 > TARGET_KB && quality > 0.30){
-        quality=Math.round((quality-0.07)*100)/100;
-        result=cv.toDataURL('image/jpeg',quality);
-      }
-
+      if(img.width>MAX*1.5){var tmp=document.createElement('canvas');tmp.width=Math.round(img.width/2);tmp.height=Math.round(img.height/2);var tctx=tmp.getContext('2d');tctx.drawImage(img,0,0,tmp.width,tmp.height);ctx.drawImage(tmp,0,0,w,h);}
+      else{ctx.drawImage(img,0,0,w,h);}
+      var quality=0.88,result=cv.toDataURL('image/jpeg',quality);
+      while(result.length*0.75/1024>150&&quality>0.30){quality=Math.round((quality-0.07)*100)/100;result=cv.toDataURL('image/jpeg',quality);}
       var finalKB=Math.round(result.length*0.75/1024);
-      var savedKB=originalKB-finalKB;
-      var savedPct=originalKB>0?Math.round(savedKB/originalKB*100):0;
-
+      var savedPct=originalKB>0?Math.round((originalKB-finalKB)/originalKB*100):0;
       D.photo=result;
-
-      // Update ring preview
       var ring=document.getElementById('photoRing');
-      if(ring){
-        ring.innerHTML='<img src="'+D.photo+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block" alt="Profilbild">'+
-          '<div class="ph-overlay">✎</div>';
-        ring.style.border='2px solid rgba(22,160,133,.5)';
-      }
-
-      // Meta line — show compression result
-      if(meta&&metaTxt){
-        var comprTxt=savedPct>5
-          ? f.name+' · '+finalKB+'KB'
-            +'<span style="color:var(--teal);margin-left:7px;font-size:9px">↓ '+savedPct+'% kleiner</span>'
-            +'<span style="color:var(--text2);margin-left:5px;font-size:9px">('+w+'×'+h+'px · Q'+Math.round(quality*100)+')</span>'
-          : f.name+' · '+finalKB+'KB'
-            +'<span style="color:var(--text2);margin-left:7px;font-size:9px">('+w+'×'+h+'px)</span>';
-        metaTxt.innerHTML=comprTxt;
-        meta.style.display='flex';
-      }
-
-      var rst=document.getElementById('photo-reset');
-      if(rst)rst.style.display='inline-block';
-      var hint=document.querySelector('.photo-hint');
-      if(hint)hint.textContent='Bild wird im Portfolio angezeigt. Zum Ändern erneut klicken.';
+      if(ring){ring.innerHTML='<img src="'+D.photo+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block" alt="Profilbild"><div class="ph-overlay">✎</div>';ring.style.border='2px solid rgba(22,160,133,.5)';}
+      if(meta&&metaTxt){var comprTxt=savedPct>5?f.name+' · '+finalKB+'KB<span style="color:var(--teal);margin-left:7px;font-size:9px">↓ '+savedPct+'% kleiner</span>':f.name+' · '+finalKB+'KB';metaTxt.innerHTML=comprTxt;meta.style.display='flex';}
+      var rst=document.getElementById('photo-reset');if(rst)rst.style.display='inline-block';
+      var hint=document.querySelector('.photo-hint');if(hint)hint.textContent='Bild wird im Portfolio angezeigt. Zum Ändern erneut klicken.';
       liveRender();
+      // Open shape preview modal
+      openShapePreview(result);
     };
     img.src=ev.target.result;
   };
@@ -1063,6 +1159,8 @@ function clearPhoto(){
   if(rst)rst.style.display='none';
   var hint=document.querySelector('.photo-hint');
   if(hint)hint.innerHTML='Drag &amp; Drop oder Klick · JPG, PNG, WebP<br>Kein Foto? Das Portfolio zeigt keinen Platzhalter.';
+  var altInp=document.getElementById('i-photo-alt');
+  if(altInp){altInp.value='';D.photoAlt='';}
   var inp=document.getElementById('photoInp');
   if(inp)inp.value='';
   liveRender();
@@ -1349,7 +1447,8 @@ function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').repl
 function syncD(){
   var m={fn:'i-fn',ln:'i-ln',title:'i-title',tagline:'i-tag',bio:'i-bio',highlight:'i-hl',
          email:'i-email',phone:'i-phone',github:'i-gh',linkedin:'i-li',website:'i-web',
-         location:'i-loc',strengths:'i-strengths',awards:'i-awards',xing:'i-xing',extra:'i-extra'};
+         location:'i-loc',strengths:'i-strengths',awards:'i-awards',xing:'i-xing',extra:'i-extra',
+         photoAlt:'i-photo-alt'};
   for(var k in m){var el=document.getElementById(m[k]);if(el)D[k]=el.value;}
   var cl=document.getElementById('cl-output');if(cl)D.coverLetter=cl.value;
 }
@@ -1383,10 +1482,91 @@ function setPhotoOpt(type,val,btn){
   if(type==='shape')photoShape=val;
   else if(type==='border')photoBorder=val;
   else if(type==='anim')photoAnim=val;
-  // Update button selection within its group
+  else if(type==='colormode'){
+    photoColorMode=val;
+    var hint=document.getElementById('duotone-hint');
+    if(hint)hint.style.display=val==='duotone'?'block':'none';
+  }
+  else if(type==='reveal'){photoReveal=val;}
   var group=btn.closest('.ps-opts');
   if(group)group.querySelectorAll('.ps-btn').forEach(function(b){b.classList.remove('sel');});
   btn.classList.add('sel');
+  liveRender();
+}
+function onFilterChange(){
+  photoFilters.brightness=parseInt(document.getElementById('pf-brightness').value)||100;
+  photoFilters.contrast=parseInt(document.getElementById('pf-contrast').value)||100;
+  photoFilters.saturation=parseInt(document.getElementById('pf-saturation').value)||100;
+  photoFilters.blur=parseFloat(document.getElementById('pf-blur').value)||0;
+  var bv=document.getElementById('pf-brightness-val');if(bv)bv.textContent=photoFilters.brightness+'%';
+  var cv=document.getElementById('pf-contrast-val');if(cv)cv.textContent=photoFilters.contrast+'%';
+  var sv=document.getElementById('pf-saturation-val');if(sv)sv.textContent=photoFilters.saturation+'%';
+  var blv=document.getElementById('pf-blur-val');if(blv)blv.textContent=photoFilters.blur===0?'Scharf':photoFilters.blur.toFixed(1)+'px';
+  // Live update builder ring
+  var img=document.querySelector('#photoRing img');
+  if(img)img.style.filter=buildFilterCSS();
+  liveRender();
+}
+function buildFilterCSS(){
+  var f='brightness('+photoFilters.brightness+'%) contrast('+photoFilters.contrast+'%) saturate('+photoFilters.saturation+'%)';
+  if(photoFilters.blur>0)f+=' blur('+photoFilters.blur+'px)';
+  if(photoColorMode==='bw')f+=' grayscale(100%)';
+  else if(photoColorMode==='sepia')f+=' sepia(85%)';
+  else if(photoColorMode==='hue')f+=' hue-rotate(180deg)';
+  return f;
+}
+function resetFilter(id,def){
+  var el=document.getElementById(id);if(el)el.value=def;
+  onFilterChange();
+}
+function resetAllFilters(){
+  ['pf-brightness','pf-contrast','pf-saturation'].forEach(function(id){
+    var el=document.getElementById(id);if(el)el.value=100;
+  });
+  var bl=document.getElementById('pf-blur');if(bl)bl.value=0;
+  onFilterChange();
+}
+
+// ═══ SHAPE PREVIEW MODAL ════════════════════════
+var spvPendingShape='circle';
+function openShapePreview(photoDataUrl){
+  // Set background image on all 4 thumbs
+  ['circle','square','hex','diamond'].forEach(function(s){
+    var el=document.getElementById('spv-thumb-'+s);
+    if(el)el.style.backgroundImage='url('+photoDataUrl+')';
+  });
+  // Sync selection to current photoShape
+  spvPendingShape=photoShape;
+  document.querySelectorAll('.spv-item').forEach(function(it){it.classList.remove('sel');});
+  var cur=document.getElementById('spv-'+photoShape);
+  if(cur)cur.classList.add('sel');
+  else document.querySelector('.spv-item').classList.add('sel');
+  document.getElementById('spv-modal').classList.add('on');
+}
+function closeShapePreview(){
+  document.getElementById('spv-modal').classList.remove('on');
+}
+function selectPreviewShape(shape,el){
+  spvPendingShape=shape;
+  document.querySelectorAll('.spv-item').forEach(function(it){it.classList.remove('sel');});
+  el.classList.add('sel');
+  // Live preview: update builder ring shape immediately
+  photoShape=shape;
+  var img=document.querySelector('#photoRing img');
+  if(img){
+    var shapeMap={circle:'border-radius:50%',square:'border-radius:10px',hex:'clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)',diamond:'clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%)'};
+    img.style.cssText=img.style.cssText.replace(/border-radius:[^;]+;?|clip-path:[^;]+;?/g,'');
+    var parts=(shapeMap[shape]||'border-radius:50%').split(':');
+    img.style[parts[0].trim()]=parts[1].trim();
+  }
+  // Sync ps-shape buttons
+  var grp=document.getElementById('ps-shape');
+  if(grp){grp.querySelectorAll('.ps-btn').forEach(function(b){b.classList.remove('sel');});var sb=grp.querySelector('[onclick*="\''+shape+'\'"]');if(sb)sb.classList.add('sel');}
+  liveRender();
+}
+function applyShapePreview(){
+  photoShape=spvPendingShape;
+  closeShapePreview();
   liveRender();
 }
 function setAccent(c){
@@ -1412,6 +1592,12 @@ function liveRender(){
   clearTimeout(_rt);
   _rt=setTimeout(function(){
     syncD();
+    // Auto-update alt placeholder with current name
+    var altInp=document.getElementById('i-photo-alt');
+    if(altInp&&!altInp.value){
+      var n=((D.fn||'')+' '+(D.ln||'')).trim();
+      altInp.placeholder=n?'Profilbild von '+n:'Profilbild von Max Mustermann';
+    }
     var fr=document.getElementById('prev-fr');if(!fr)return;
     fr.srcdoc=buildPortfolio(false);
   },200);
@@ -1816,12 +2002,89 @@ function buildPortfolio(full){
     '})();';
   }
 
-  // Avatar HTML — only when photo set
+  // Photo filters & colormode
+  var pColorMode=photoColorMode||'normal';
+  var filterCSS='brightness('+photoFilters.brightness+'%) contrast('+photoFilters.contrast+'%) saturate('+photoFilters.saturation+'%)';
+  if(photoFilters.blur>0)filterCSS+=' blur('+photoFilters.blur+'px)';
+  if(pColorMode==='bw')filterCSS+=' grayscale(100%)';
+  else if(pColorMode==='sepia')filterCSS+=' sepia(85%)';
+  else if(pColorMode==='hue')filterCSS+=' hue-rotate(180deg)';
+  // Duotone via SVG filter
+  var duotoneFilterSVG='';
+  var duotoneImgStyle='';
+  if(pColorMode==='duotone'){
+    var hex=ac.replace('#','');
+    var dr=parseInt(hex.substring(0,2),16)/255;
+    var dg=parseInt(hex.substring(2,4),16)/255;
+    var db=parseInt(hex.substring(4,6),16)/255;
+    duotoneFilterSVG='<svg style="position:absolute;width:0;height:0;overflow:hidden"><defs>'+
+      '<filter id="duo"><feColorMatrix type="saturate" values="0"/>'+
+      '<feComponentTransfer>'+
+      '<feFuncR type="table" tableValues="0.04 '+dr.toFixed(3)+'"/>'+
+      '<feFuncG type="table" tableValues="0.04 '+dg.toFixed(3)+'"/>'+
+      '<feFuncB type="table" tableValues="0.08 '+db.toFixed(3)+'"/>'+
+      '</feComponentTransfer></filter></defs></svg>';
+    duotoneImgStyle=' filter:url(#duo) brightness('+photoFilters.brightness+'%) contrast('+photoFilters.contrast+'%);';
+    filterCSS='';
+  }
+
   var avatarHTML='';
   var hasPhoto=!!D.photo;
+
+  var pReveal=photoReveal||'none';
+
+  // Photo reveal animation CSS + JS
+  var revealCSS='';
+  var revealJS='';
+  if(pReveal!=='none'&&hasPhoto){
+    if(pReveal==='slideup'){
+      revealCSS='@keyframes ph-slideup{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}'+
+        '.hero-photo{animation:ph-slideup .9s .6s cubic-bezier(.4,0,.2,1) both!important}';
+    }else if(pReveal==='zoom'){
+      revealCSS='@keyframes ph-zoomin{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:scale(1)}}'+
+        '.hero-photo{animation:ph-zoomin .8s .5s cubic-bezier(.34,1.26,.64,1) both!important}';
+    }else if(pReveal==='curtain'){
+      // Curtain: a pseudo-element overlay slides away
+      revealCSS='@keyframes ph-curtain{from{transform:scaleX(1)}to{transform:scaleX(0)}}'+
+        '.photo-frame{position:relative!important}'+
+        '.photo-frame::after{content:"";position:absolute;inset:0;background:'+ac+';transform-origin:left;animation:ph-curtain .8s .5s cubic-bezier(.77,0,.18,1) forwards;pointer-events:none}';
+    }else if(pReveal==='pixel'){
+      // Pixel dissolve via JS canvas overlay
+      revealCSS='.ph-pixel-canvas{position:absolute;inset:0;pointer-events:none;z-index:2}';
+      revealJS='(function(){'+
+        'var frame=document.querySelector(".photo-frame");if(!frame)return;'+
+        'var cv=document.createElement("canvas");cv.className="ph-pixel-canvas";'+
+        'frame.style.position="relative";frame.appendChild(cv);'+
+        'setTimeout(function(){'+
+          'var W=frame.offsetWidth||120,H=frame.offsetHeight||160;'+
+          'cv.width=W;cv.height=H;'+
+          'var ctx=cv.getContext("2d");'+
+          'var SZ=8;'+
+          'var cols=Math.ceil(W/SZ),rows=Math.ceil(H/SZ);'+
+          'var total=cols*rows;'+
+          'var cells=[];for(var i=0;i<total;i++)cells.push(i);'+
+          // Fisher-Yates shuffle
+          'for(var i=cells.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var tmp=cells[i];cells[i]=cells[j];cells[j]=tmp;}'+
+          'ctx.fillStyle="'+ac+'";ctx.fillRect(0,0,W,H);'+
+          'var idx=0;var interval=setInterval(function(){'+
+            'var batch=Math.ceil(total/28);'+
+            'for(var b=0;b<batch&&idx<total;b++,idx++){'+
+              'var cell=cells[idx];'+
+              'var cx=(cell%cols)*SZ,cy=Math.floor(cell/cols)*SZ;'+
+              'ctx.clearRect(cx,cy,SZ,SZ);'+
+            '}'+
+            'if(idx>=total){clearInterval(interval);cv.remove();}'+
+          '},28);'+
+        '},400);'+
+      '})();';
+    }
+  }
   if(hasPhoto){
-    avatarHTML='<div class="ph-wrap" style="width:100%;height:100%;position:relative;'+photoAnimStyle+'">'+
-      '<img src="'+D.photo+'" style="width:100%;height:100%;object-fit:cover;display:block;'+shapeCSS+';'+borderCSS+'" alt="'+name+'">'+
+    var imgAltText=D.photoAlt||(name+' — Profilbild');
+    var imgFilter=pColorMode==='duotone'?duotoneImgStyle:(filterCSS?'filter:'+filterCSS+';':'');
+    avatarHTML=duotoneFilterSVG+
+      '<div class="ph-wrap" style="width:100%;height:100%;position:relative;'+photoAnimStyle+'">'+
+      '<img src="'+D.photo+'" style="width:100%;height:100%;object-fit:cover;display:block;'+shapeCSS+';'+borderCSS+imgFilter+'" alt="'+imgAltText.replace(/"/g,'&quot;')+'">'+
       scanOverlay+qrOverlayHTML+
     '</div>';
   }
@@ -2061,7 +2324,7 @@ function buildPortfolio(full){
   '.photo-frame{width:100%;height:100%;border-radius:4px;overflow:visible;display:flex;align-items:center;justify-content:center}'+
   '.ph-qr-overlay{position:absolute;inset:0;background:rgba(0,0,0,.82);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;'+shapeCSS+'}'+
   '.ph-wrap:hover .ph-qr-overlay{opacity:1}'+
-  photoAnimCSS+
+  photoAnimCSS+revealCSS+
   '.scroll-hint{position:absolute;bottom:28px;left:10vw;display:flex;align-items:center;gap:10px;opacity:0;animation:fi 1s 1.8s both}'+
   '.scroll-hint span{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:'+c.text2+';font-family:'+c.mono+'}'+
   '.scroll-line{width:36px;height:1px;background:'+c.hr+';position:relative;overflow:hidden}.scroll-line::after{content:"";position:absolute;left:-100%;top:0;width:100%;height:100%;background:'+ac+';animation:scan 2s ease-in-out infinite}'+
@@ -2204,7 +2467,7 @@ function buildPortfolio(full){
 
   // Keyboard accessibility for project cards
   'document.querySelectorAll(".proj-card").forEach(function(c){c.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();var lnk=this.querySelector(".proj-link");if(lnk)lnk.click();}});});'+
-  tiltJS+
+  tiltJS+revealJS+
 
   '<\/script></body></html>';
 }
