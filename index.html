@@ -194,6 +194,14 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
 .av-thumb svg,.av-thumb img,.av-thumb canvas{width:100%;height:100%;display:block}
 .av-lbl{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);font-family:'JetBrains Mono',monospace;transition:color .15s;text-align:center}
 .av-opt.sel .av-lbl{color:var(--teal)}
+/* ── QR-Code Panel ── */
+.qr-expanded{margin-top:10px}
+.qr-preview-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg3);border:1px solid var(--hr);border-radius:8px;padding:14px;margin-bottom:10px;min-height:80px;position:relative;overflow:hidden}
+.qr-preview-label{position:absolute;top:7px;left:10px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);font-family:'JetBrains Mono',monospace}
+.qr-preview-svg{width:90px;height:90px;image-rendering:crisp-edges;border-radius:4px}
+.qr-preview-ph{font-size:10px;color:var(--text2);opacity:.55;text-align:center;line-height:1.8}
+.qr-status{font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--teal);margin-top:5px;letter-spacing:.5px;opacity:.8}
+.qr-content-lbl{font-size:9px;color:var(--text2);margin-top:6px;padding:4px 8px;background:rgba(22,160,133,.06);border-radius:3px;font-family:'JetBrains Mono',monospace;word-break:break-all;line-height:1.4;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .tags-box{display:flex;flex-wrap:wrap;gap:5px;padding:8px 10px;background:var(--inp-bg);border:1px solid var(--inp-br);border-radius:3px;min-height:44px;cursor:text;transition:border-color .2s}
 .tags-box:focus-within{border-color:rgba(22,160,133,.6)}
 .chip{display:inline-flex;align-items:center;gap:4px;background:rgba(22,160,133,.1);border:1px solid rgba(22,160,133,.22);color:var(--teal);padding:3px 9px;border-radius:20px;font-size:11px;font-family:'JetBrains Mono',monospace}
@@ -552,10 +560,64 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
 
       <div class="toggle-row" style="margin-top:8px">
         <div>
-          <div class="toggle-label">QR-Code (interaktiv)</div>
-          <div class="toggle-sub">Hover über Foto → QR-Code mit Kontaktdaten</div>
+          <div class="toggle-label">QR-Code</div>
+          <div class="toggle-sub">Interaktiver QR im Portfolio</div>
         </div>
-        <label class="toggle-sw"><input type="checkbox" id="photo-qr" onchange="liveRender()"><div class="toggle-track"><div class="toggle-thumb"></div></div></label>
+        <label class="toggle-sw"><input type="checkbox" id="photo-qr" onchange="onQRChange()"><div class="toggle-track"><div class="toggle-thumb"></div></div></label>
+      </div>
+
+      <div id="qr-expanded" class="qr-expanded" style="display:none">
+        <!-- Vorschau -->
+        <div class="qr-preview-wrap" id="qr-preview-wrap">
+          <div class="qr-preview-label">Vorschau</div>
+          <div id="qr-preview-inner"><div class="qr-preview-ph">⟳ Aktiviere QR oben</div></div>
+          <div class="qr-status" id="qr-status" style="display:none"></div>
+        </div>
+        <div class="qr-content-lbl" id="qr-content-lbl" style="display:none"></div>
+
+        <!-- Inhalt -->
+        <div class="ps-row"><div class="ps-label">Inhalt</div>
+          <div class="ps-opts" id="qrp-content">
+            <button class="ps-btn sel" onclick="setQROpt('content','auto',this)">Auto</button>
+            <button class="ps-btn" onclick="setQROpt('content','email',this)">Mail</button>
+            <button class="ps-btn" onclick="setQROpt('content','website',this)">Web</button>
+            <button class="ps-btn" onclick="setQROpt('content','linkedin',this)">LinkedIn</button>
+            <button class="ps-btn" onclick="setQROpt('content','vcard',this)">vCard</button>
+          </div>
+        </div>
+
+        <!-- Stil -->
+        <div class="ps-row"><div class="ps-label">Stil</div>
+          <div class="ps-opts" id="qrp-style">
+            <button class="ps-btn" onclick="setQROpt('style','classic',this)">Klassisch</button>
+            <button class="ps-btn sel" onclick="setQROpt('style','accent',this)">Akzent</button>
+            <button class="ps-btn" onclick="setQROpt('style','gradient',this)">Gradient</button>
+            <button class="ps-btn" onclick="setQROpt('style','rounded',this)">Weich</button>
+            <button class="ps-btn" onclick="setQROpt('style','dots',this)">Dots</button>
+            <button class="ps-btn" onclick="setQROpt('style','invert',this)">Invert</button>
+          </div>
+        </div>
+
+        <!-- Animation -->
+        <div class="ps-row"><div class="ps-label">Anim</div>
+          <div class="ps-opts" id="qrp-anim">
+            <button class="ps-btn" onclick="setQROpt('anim','none',this)">Keine</button>
+            <button class="ps-btn sel" onclick="setQROpt('anim','scan',this)">▷ Scan</button>
+            <button class="ps-btn" onclick="setQROpt('anim','pulse',this)">◎ Pulse</button>
+            <button class="ps-btn" onclick="setQROpt('anim','glitch',this)">▒ Glitch</button>
+            <button class="ps-btn" onclick="setQROpt('anim','glow',this)">✦ Glow</button>
+          </div>
+        </div>
+
+        <!-- Anzeige -->
+        <div class="ps-row"><div class="ps-label">Trigger</div>
+          <div class="ps-opts" id="qrp-trigger">
+            <button class="ps-btn sel" onclick="setQROpt('trigger','hover',this)">Hover</button>
+            <button class="ps-btn" onclick="setQROpt('trigger','click',this)">Klick</button>
+            <button class="ps-btn" onclick="setQROpt('trigger','corner',this)">Ecke</button>
+            <button class="ps-btn" onclick="setQROpt('trigger','always',this)">Immer</button>
+          </div>
+        </div>
       </div>
 
       <!-- SCHRITT 3: Bildkorrektur -->
@@ -1057,7 +1119,10 @@ var photoColorMode='normal';
 // Photo crop / focus point
 var photoOffsetX=50,photoOffsetY=50,photoZoom=100;
 // Avatar (Alternative zum Foto)
-var photoAvatar='none'; // 'none'|'initials'|'geo'|'wave'|'dots'|'gradient'
+var photoAvatar='none'; // 'none'|'initials'|'geo'|'wave'|'dots'
+// QR Code
+var qrOpts={on:false,content:'auto',style:'accent',anim:'scan',trigger:'hover'};
+var _lastQRText='',_lastQRStyle='',_cachedQRSvg='';
 
 var STEP_LABELS=['Import','Identität','Skills','Projekte','Karriere','Kontakt','KI-Tools','Design'];
 var STEP_COUNT=8;
@@ -1138,6 +1203,11 @@ function resetAll(){
   photoAvatar='none';
   document.querySelectorAll('[id^="avo-"]').forEach(function(el){el.classList.remove('sel');});
   var avoNone=document.getElementById('avo-none');if(avoNone)avoNone.classList.add('sel');
+  qrOpts={on:false,content:'auto',style:'accent',anim:'scan',trigger:'hover'};
+  _cachedQRSvg='';_lastQRStyle='';
+  var qrCb=document.getElementById('photo-qr');if(qrCb)qrCb.checked=false;
+  var qrExp=document.getElementById('qr-expanded');if(qrExp)qrExp.style.display='none';
+  renderQRPreview();
   resetAllFilters();
   document.querySelectorAll('.ps-opts .ps-btn').forEach(function(b){b.classList.remove('sel');});
   document.querySelectorAll('#ps-shape .ps-btn,#ps-border .ps-btn,#ps-anim .ps-btn,#ps-colormode .ps-btn').forEach(function(b,i){if(i===0)b.classList.add('sel');});
@@ -1807,6 +1877,125 @@ function refreshAvatarPreviews(){
   });
 }
 
+// ═══════════════════════════════════════════════════════
+// QR CODE ENGINE — pure JS, keine externe API / kein CDN
+// ═══════════════════════════════════════════════════════
+var _QR=(function(){
+  var EX=new Array(512),LG=new Array(256);
+  (function(){var v=1;for(var i=0;i<255;i++){EX[i]=v;LG[v]=i;v<<=1;if(v>255)v^=0x11D;}for(var i=255;i<512;i++)EX[i]=EX[i-255];})();
+  function gm(a,b){return a&&b?EX[(LG[a]+LG[b])%255]:0;}
+  function px(a,b){var r=new Array(a.length+b.length-1).fill(0);for(var i=0;i<a.length;i++)for(var j=0;j<b.length;j++)r[i+j]^=gm(a[i],b[j]);return r;}
+  function rs(d,n){var g=[1];for(var i=0;i<n;i++)g=px(g,[1,EX[i]]);var r=d.concat(new Array(n).fill(0));for(var i=0;i<d.length;i++){if(!r[i])continue;for(var j=0;j<g.length;j++)r[i+j]^=gm(g[j],r[i]);}return r.slice(d.length);}
+  var VM=[null,[10,1,16,0,0],[16,1,28,0,0],[26,1,44,0,0],[18,2,32,0,0],[24,2,43,0,0],[16,4,27,0,0],[18,4,31,0,0],[22,2,38,2,39],[22,3,36,2,37],[26,4,43,1,44]];
+  var CAP=[0,16,28,44,64,86,108,124,154,182,216];
+  var AP=[null,[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,28,46],[6,32,50]];
+  var FI=['101010000010010','101000100100101','101111001111100','101101101001011','100010111111001','100000011001110','100111110010111','100101010100000'];
+  function mc(p,r,c){var i=0|r/2,j=0|c/3;return[!((r+c)%2),!(r%2),!(c%3),!((r+c)%3),!((i+j)%2),!(r*c%2+r*c%3),!((r*c%2+r*c%3)%2),!((r+c)%2+r*c%3)%2][p];}
+  function pen(m,n){var p=0;for(var r=0;r<n;r++){var run=1;for(var c=1;c<n;c++){if(m[r][c]===m[r][c-1]){if(++run===5)p+=3;else if(run>5)p++;}else run=1;}}for(var c=0;c<n;c++){var run=1;for(var r=1;r<n;r++){if(m[r][c]===m[r-1][c]){if(++run===5)p+=3;else if(run>5)p++;}else run=1;}}for(var r=0;r<n-1;r++)for(var c=0;c<n-1;c++)if(m[r][c]===m[r+1][c]&&m[r][c]===m[r][c+1]&&m[r][c]===m[r+1][c+1])p+=3;return p;}
+  function encode(text){
+    var B=[];
+    for(var i=0;i<text.length;){var cp=text.codePointAt(i);if(cp<0x80){B.push(cp);i++;}else if(cp<0x800){B.push(0xC0|(cp>>6),0x80|(cp&63));i++;}else if(cp<0x10000){B.push(0xE0|(cp>>12),0x80|((cp>>6)&63),0x80|(cp&63));i++;}else{B.push(0xF0|(cp>>18),0x80|((cp>>12)&63),0x80|((cp>>6)&63),0x80|(cp&63));i+=2;}}
+    var v=1;while(v<=10&&B.length>CAP[v])v++;if(v>10)return null;
+    var ec=VM[v],n=v*4+17,totalD=ec[1]*ec[2]+ec[3]*ec[4];
+    var bits=[],ab=function(x,l){for(var k=l-1;k>=0;k--)bits.push((x>>k)&1);};
+    ab(4,4);ab(B.length,v<10?8:16);for(var i=0;i<B.length;i++)ab(B[i],8);ab(0,4);
+    while(bits.length%8)bits.push(0);var pds=[236,17],pi=0;while(bits.length<totalD*8)ab(pds[pi++%2],8);
+    var cws=[];for(var i=0;i<bits.length;i+=8){var b=0;for(var k=0;k<8;k++)b=(b<<1)|bits[i+k];cws.push(b);}
+    var blks=[],pos=0;for(var g=0;g<2;g++){var cnt=g?ec[3]:ec[1],dc=g?ec[4]:ec[2];for(var b=0;b<cnt;b++){blks.push(cws.slice(pos,pos+dc));pos+=dc;}}
+    var ecB=blks.map(function(b){return rs(b,ec[0]);});
+    var fc=[],mD=Math.max.apply(null,blks.map(function(b){return b.length;}));
+    for(var i=0;i<mD;i++)for(var b=0;b<blks.length;b++)if(i<blks[b].length)fc.push(blks[b][i]);
+    for(var i=0;i<ec[0];i++)for(var b=0;b<blks.length;b++)fc.push(ecB[b][i]);
+    var mat=[],fn2=[];for(var i=0;i<n;i++){mat.push(new Array(n).fill(-1));fn2.push(new Array(n).fill(0));}
+    function sm(r,c,val){mat[r][c]=val;fn2[r][c]=1;}
+    function finder(r0,c0){for(var dr=-1;dr<=7;dr++)for(var dc=-1;dc<=7;dc++){var r=r0+dr,c=c0+dc;if(r<0||r>=n||c<0||c>=n)continue;sm(r,c,(dr>=0&&dr<=6&&(dr===0||dr===6||dc===0||dc===6))||(dr>=2&&dr<=4&&dc>=2&&dc<=4)?1:0);}}
+    finder(0,0);finder(0,n-7);finder(n-7,0);
+    for(var i=7;i<=n-8;i++){sm(6,i,i%2===0?1:0);sm(i,6,i%2===0?1:0);}
+    sm(4*v+9,8,1);
+    var ap=AP[v];for(var ai=0;ai<ap.length;ai++)for(var aj=0;aj<ap.length;aj++){var ar=ap[ai],ac2=ap[aj];if(fn2[ar][ac2])continue;for(var dr=-2;dr<=2;dr++)for(var dc=-2;dc<=2;dc++){sm(ar+dr,ac2+dc,(Math.abs(dr)===2||Math.abs(dc)===2||(dr===0&&dc===0))?1:0);}}
+    var c1p=[[8,0],[8,1],[8,2],[8,3],[8,4],[8,5],[8,7],[8,8],[7,8],[5,8],[4,8],[3,8],[2,8],[1,8],[0,8]];
+    for(var i=0;i<c1p.length;i++)fn2[c1p[i][0]][c1p[i][1]]=1;
+    for(var i=0;i<7;i++)fn2[n-7+i][8]=1;for(var i=0;i<8;i++)fn2[8][n-8+i]=1;
+    var aB=[];for(var i=0;i<fc.length;i++)for(var k=7;k>=0;k--)aB.push((fc[i]>>k)&1);
+    var bi=0,dir=-1;
+    for(var col=n-1;col>=0;col-=2){if(col===6)col=5;for(var row=0;row<n;row++){var r=dir===-1?n-1-row:row;for(var k=0;k<2;k++){var c=col-k;if(!fn2[r][c]&&bi<aB.length)mat[r][c]=aB[bi++];else if(!fn2[r][c])mat[r][c]=0;}}dir=-dir;}
+    var bMask=0,bPen=1e9;
+    for(var mask=0;mask<8;mask++){var tmp=mat.map(function(rw){return rw.slice();});for(var r=0;r<n;r++)for(var c=0;c<n;c++)if(!fn2[r][c]&&mc(mask,r,c))tmp[r][c]^=1;var pp=pen(tmp,n);if(pp<bPen){bPen=pp;bMask=mask;}}
+    for(var r=0;r<n;r++)for(var c=0;c<n;c++)if(!fn2[r][c]&&mc(bMask,r,c))mat[r][c]^=1;
+    var fb=FI[bMask].split('').map(Number);
+    for(var i=0;i<15;i++)mat[c1p[i][0]][c1p[i][1]]=fb[i];
+    for(var i=0;i<7;i++)mat[n-7+i][8]=fb[i];for(var i=7;i<15;i++)mat[8][n-15+i]=fb[i];
+    return{mat:mat,size:n,ver:v};
+  }
+  function toSVG(qr,opts){
+    if(!qr)return'';
+    var n=qr.size,m=opts.m||7,style=opts.style||'classic',ac=opts.ac||'#000';
+    var W=n*m+2*m,qz=m,hex=ac.replace('#','');
+    var ri=parseInt(hex.slice(0,2),16)||0,gi=parseInt(hex.slice(2,4),16)||0,bi=parseInt(hex.slice(4,6),16)||0;
+    var dark=style==='invert'?'#fff':style==='classic'?'#111':ac;
+    var bg=style==='invert'?ac:'#fff';
+    var r2=style==='rounded'?m*0.36:style==='dots'?m*0.5:0;
+    var ds=style==='dots'?m*0.76:m,off=style==='dots'?(m-ds)/2:0;
+    var out='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+W+' '+W+'" shape-rendering="crispEdges">';
+    if(style==='gradient'){var r2c=Math.max(0,ri-55).toString(16).padStart(2,'0'),g2c=Math.max(0,gi-38).toString(16).padStart(2,'0'),b2c=Math.max(0,bi-10).toString(16).padStart(2,'0');out+='<defs><linearGradient id="qrg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="'+ac+'"/><stop offset="100%" stop-color="#'+r2c+g2c+b2c+'"/></linearGradient></defs>';dark='url(#qrg)';}
+    out+='<rect width="'+W+'" height="'+W+'" fill="'+bg+'"/>';
+    if(r2===0){var path='';for(var row=0;row<n;row++)for(var col=0;col<n;col++)if(qr.mat[row][col]===1){var x=col*m+qz,y=row*m+qz;path+='M'+x+' '+y+'h'+m+'v'+m+'h-'+m+'Z';}if(path)out+='<path d="'+path+'" fill="'+dark+'"/>';}
+    else{for(var row=0;row<n;row++)for(var col=0;col<n;col++)if(qr.mat[row][col]===1){var x=(col*m+qz+off).toFixed(1),y=(row*m+qz+off).toFixed(1);out+='<rect x="'+x+'" y="'+y+'" width="'+ds.toFixed(1)+'" height="'+ds.toFixed(1)+'" rx="'+r2.toFixed(1)+'" fill="'+dark+'"/>';}}
+    return out+'</svg>';
+  }
+  return{encode:encode,toSVG:toSVG};
+}());
+
+// ─── QR Management ──────────────────────────────────────────────
+function getQRText(){
+  var c=qrOpts.content;
+  var fn2=((document.getElementById('i-fn')||{}).value||'');
+  var ln2=((document.getElementById('i-ln')||{}).value||'');
+  var nm=(fn2+' '+ln2).trim();
+  if(c==='email')  return D.email?'mailto:'+D.email:'';
+  if(c==='website')return D.website?'https://'+D.website.replace(/^https?:\/\//,''):'';
+  if(c==='linkedin')return D.linkedin?'https://'+D.linkedin.replace(/^https?:\/\//,''):'';
+  if(c==='vcard')  return'BEGIN:VCARD\nVERSION:3.0\nFN:'+nm+'\n'+(D.title?'TITLE:'+D.title+'\n':'')+(D.email?'EMAIL:'+D.email+'\n':'')+(D.phone?'TEL:'+D.phone+'\n':'')+(D.website?'URL:https://'+D.website.replace(/^https?:\/\//,'')+'\n':'')+'END:VCARD';
+  return D.website?'https://'+D.website.replace(/^https?:\/\//,''):D.email?'mailto:'+D.email:D.linkedin?'https://'+D.linkedin.replace(/^https?:\/\//,''):nm||'FOLIO';
+}
+function buildQRSvg(){
+  var text=getQRText()||'FOLIO';
+  var key=text+'|'+qrOpts.style+'|'+accentColor;
+  if(key===_lastQRStyle&&_cachedQRSvg)return _cachedQRSvg;
+  var qrData=_QR.encode(text);
+  var svg=_QR.toSVG(qrData,{style:qrOpts.style,ac:accentColor,m:7});
+  _lastQRText=text;_lastQRStyle=key;_cachedQRSvg=svg;
+  return svg;
+}
+function renderQRPreview(){
+  var inner=document.getElementById('qr-preview-inner');
+  var statusEl=document.getElementById('qr-status');
+  var lblEl=document.getElementById('qr-content-lbl');
+  if(!inner)return;
+  if(!qrOpts.on){inner.innerHTML='<div class="qr-preview-ph">QR deaktiviert</div>';if(statusEl)statusEl.style.display='none';if(lblEl)lblEl.style.display='none';return;}
+  var text=getQRText();
+  if(!text){inner.innerHTML='<div class="qr-preview-ph">Kein Inhalt — füge<br>E-Mail oder Website ein</div>';if(statusEl)statusEl.style.display='none';if(lblEl)lblEl.style.display='none';return;}
+  var svg=buildQRSvg();
+  inner.innerHTML='<div style="width:90px;height:90px">'+svg+'</div>';
+  var qrRes=_QR.encode(text||'FOLIO');
+  if(statusEl){statusEl.style.display='block';statusEl.textContent='✓ v'+(qrRes?qrRes.ver:1)+' · Level M · '+qrOpts.style;}
+  if(lblEl){var lbl=text.length>54?text.slice(0,51)+'…':text;lblEl.style.display='block';lblEl.textContent=lbl;}
+}
+function onQRChange(){
+  var cb=document.getElementById('photo-qr');
+  qrOpts.on=!!(cb&&cb.checked);
+  var exp=document.getElementById('qr-expanded');
+  if(exp)exp.style.display=qrOpts.on?'block':'none';
+  _cachedQRSvg='';_lastQRStyle='';
+  renderQRPreview();liveRender();
+}
+function setQROpt(type,val,btn){
+  qrOpts[type]=val;
+  if(btn){var par=btn.closest('.ps-opts');if(par)par.querySelectorAll('.ps-btn').forEach(function(b){b.classList.remove('sel');});btn.classList.add('sel');}
+  if(type==='content'||type==='style'){_cachedQRSvg='';_lastQRStyle='';}
+  renderQRPreview();liveRender();
+}
+
 // ═══ SHAPE PREVIEW MODAL ════════════════════════
 var spvPendingShape='circle';
 function openShapePreview(photoDataUrl){
@@ -2260,13 +2449,41 @@ function buildPortfolio(full){
     photoAnimStyle='animation:ph-spin 18s linear infinite;';
   }
 
-  // QR code hover HTML
-  var qrOverlayHTML='';
-  if(pQR&&hasPhoto){
-    qrOverlayHTML='<div class="ph-qr-overlay">'+
-      '<img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&color=ffffff&bgcolor=000000&data='+qrData+'" width="100" height="100" alt="QR" style="border-radius:4px" loading="lazy">'+
-      '<div style="font-size:9px;color:rgba(255,255,255,.6);margin-top:6px;font-family:monospace;letter-spacing:1px">SCAN · KONTAKT</div>'+
-    '</div>';
+  // ─── Animierter QR-Code ───────────────────────────────
+  var qrOverlayHTML='',qrExtraCSS='',qrClickJS='',qrCornerHTML='';
+  var pQR2=qrOpts.on&&(hasPhoto||hasAvatar);
+  if(pQR2){
+    var qrSVG=buildQRSvg();
+    var qrAnim=qrOpts.anim,qrTrig=qrOpts.trigger;
+    // Background overlay color (semi-transparent, accent-tinted)
+    var qrBg='rgba('+Math.round(parseInt(ac.slice(1,3),16)*.15)+','+Math.round(parseInt(ac.slice(3,5),16)*.15)+','+Math.round(parseInt(ac.slice(5,7),16)*.15)+',.93)';
+    // Animation CSS for the QR image wrapper
+    var qrAnimCSS='';
+    if(qrAnim==='scan'){
+      qrAnimCSS+='.qr-sl{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,'+ac+',#fff,'+ac+',transparent);animation:qrsc 2.2s linear infinite;pointer-events:none}';
+      qrAnimCSS+='@keyframes qrsc{0%{top:2%;opacity:.9}85%{opacity:.9}100%{top:95%;opacity:0}}';
+    }else if(qrAnim==='pulse'){
+      qrAnimCSS+='.qr-w{animation:qrpl 2.4s ease-in-out infinite}@keyframes qrpl{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.93);opacity:.75}}';
+    }else if(qrAnim==='glitch'){
+      qrAnimCSS+='.qr-w{animation:qrgl 5s ease-in-out infinite}@keyframes qrgl{0%,78%,100%{transform:none;filter:none}80%{transform:translate(-3px,0);filter:drop-shadow(3px 0 0 #ff006677)}82%{transform:translate(3px,0);filter:drop-shadow(-3px 0 0 #00ffcc77)}84%{transform:translate(-1px,1px);filter:none}86%{transform:none}}';
+    }else if(qrAnim==='glow'){
+      qrAnimCSS+='.qr-w{animation:qrgl2 2s ease-in-out infinite}@keyframes qrgl2{0%,100%{filter:drop-shadow(0 0 4px '+ac+')}50%{filter:drop-shadow(0 0 18px '+ac+')drop-shadow(0 0 35px '+ac+'66)}}';
+    }
+    qrExtraCSS=qrAnimCSS;
+    // Inner QR HTML
+    var scanLine=qrAnim==='scan'?'<div class="qr-sl"></div>':'';
+    var qrInner='<div class="qr-w" style="position:relative;width:min(75%,120px);aspect-ratio:1">'+qrSVG+scanLine+'</div><div style="font-size:8px;color:rgba(255,255,255,.65);margin-top:8px;font-family:monospace;letter-spacing:2.5px;text-transform:uppercase">SCAN · KONTAKT</div>';
+    if(qrTrig==='hover'){
+      qrOverlayHTML='<div class="ph-qr-ov" style="position:absolute;inset:0;'+shapeCSS+';background:'+qrBg+';display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .35s;pointer-events:none">'+qrInner+'</div>';
+      qrExtraCSS+='.ph-wrap:hover .ph-qr-ov{opacity:1!important}';
+    }else if(qrTrig==='click'){
+      qrOverlayHTML='<div class="ph-qr-ov" id="qr-ov" style="position:absolute;inset:0;'+shapeCSS+';background:'+qrBg+';display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .35s;cursor:pointer" onclick="this.classList.toggle(\'qro\')">'+qrInner+'<div style="position:absolute;bottom:10%;font-size:7px;color:'+ac+';letter-spacing:2px;font-family:monospace;opacity:.7">KLICKEN</div></div>';
+      qrExtraCSS+='.ph-wrap{cursor:pointer}.ph-wrap:hover .ph-qr-ov:not(.qro){opacity:.2}.ph-qr-ov.qro{opacity:1!important}';
+    }else if(qrTrig==='corner'){
+      qrCornerHTML='<div style="position:absolute;bottom:-68px;right:-12px;background:'+c.bg2+';border:1.5px solid '+ac+'44;border-radius:10px;padding:8px;box-shadow:0 4px 24px rgba(0,0,0,.25);transition:transform .2s,box-shadow .2s" onmouseover="this.style.transform=\'scale(1.06)\';this.style.boxShadow=\'0 8px 32px rgba(0,0,0,.35)\'" onmouseout="this.style.transform=\'\';this.style.boxShadow=\'0 4px 24px rgba(0,0,0,.25)\'"><div class="qr-w" style="width:64px;height:64px">'+qrSVG+'</div><div style="font-size:7px;color:'+ac+';font-family:monospace;letter-spacing:2px;text-align:center;margin-top:4px">QR</div></div>';
+    }else if(qrTrig==='always'){
+      qrOverlayHTML='<div style="position:absolute;inset:0;'+shapeCSS+';background:'+qrBg+';display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none">'+qrInner+'</div>';
+    }
   }
 
   // 3D tilt JS (injected after build)
@@ -2615,10 +2832,8 @@ function buildPortfolio(full){
   '.btn-h.fill{background:'+ac+';color:'+c.bg+';border:none}.btn-h.fill:hover{filter:brightness(1.12);transform:translateY(-2px);box-shadow:0 12px 36px '+ac+'44}'+
   '.btn-h.line{background:transparent;color:'+c.text+';border:1px solid '+c.hr+'}.btn-h.line:hover{border-color:'+ac+'66;color:'+ac+'}'+
   '.hero-photo{position:absolute;right:8vw;bottom:0;width:clamp(140px,17vw,240px);height:clamp(180px,24vw,340px);opacity:0;animation:fi 1s 1.3s both}'+
-  '.photo-frame{width:100%;height:100%;border-radius:4px;overflow:visible;display:flex;align-items:center;justify-content:center}'+
-  '.ph-qr-overlay{position:absolute;inset:0;background:rgba(0,0,0,.82);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;'+shapeCSS+'}'+
-  '.ph-wrap:hover .ph-qr-overlay{opacity:1}'+
-  photoAnimCSS+revealCSS+
+  '.photo-frame{width:100%;height:100%;border-radius:4px;overflow:visible;display:flex;align-items:center;justify-content:center;position:relative}'+
+  photoAnimCSS+qrExtraCSS+revealCSS+
   '.scroll-hint{position:absolute;bottom:28px;left:10vw;display:flex;align-items:center;gap:10px;opacity:0;animation:fi 1s 1.8s both}'+
   '.scroll-hint span{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:'+c.text2+';font-family:'+c.mono+'}'+
   '.scroll-line{width:36px;height:1px;background:'+c.hr+';position:relative;overflow:hidden}.scroll-line::after{content:"";position:absolute;left:-100%;top:0;width:100%;height:100%;background:'+ac+';animation:scan 2s ease-in-out infinite}'+
@@ -2706,7 +2921,7 @@ function buildPortfolio(full){
   (D.projects.length?'<button class="btn-h line" onclick="document.getElementById(\'sec-projekte\')&&document.getElementById(\'sec-projekte\').scrollIntoView({behavior:\'smooth\'})">Projekte ansehen</button>':'')+
   (D.website?'<a href="https://'+D.website.replace(/^https?:\/\//,'')+'" target="_blank" class="btn-h line">↗ Website</a>':'')+
   '</div></div>'+
-  (hasPhoto||hasAvatar?'<div class="hero-photo"><div class="photo-frame">'+avatarHTML+'</div></div>':'')+
+  (hasPhoto||hasAvatar?'<div class="hero-photo"><div class="photo-frame">'+avatarHTML+'</div>'+qrCornerHTML+'</div>':'')+
   '<div class="scroll-hint"><span>Scroll</span><div class="scroll-line"></div></div>'+
   '</section>'+
 
