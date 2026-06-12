@@ -202,6 +202,31 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
 .qr-preview-ph{font-size:10px;color:var(--text2);opacity:.55;text-align:center;line-height:1.8}
 .qr-status{font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--teal);margin-top:5px;letter-spacing:.5px;opacity:.8}
 .qr-content-lbl{font-size:9px;color:var(--text2);margin-top:6px;padding:4px 8px;background:rgba(22,160,133,.06);border-radius:3px;font-family:'JetBrains Mono',monospace;word-break:break-all;line-height:1.4;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* QR Custom & Zeugnis Inputs */
+.qr-sub-panel{margin-top:8px;padding:10px 12px;background:var(--bg3);border:1px solid var(--hr);border-radius:6px;display:none}
+.qr-sub-panel.show{display:block}
+.qr-sub-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);font-family:'JetBrains Mono',monospace;margin-bottom:6px}
+.qr-inp{width:100%;font-size:11px;padding:6px 9px;background:var(--bg2);border:1px solid var(--hr);border-radius:4px;color:var(--text);font-family:inherit;box-sizing:border-box;transition:border-color .15s;resize:none}
+.qr-inp:focus{outline:none;border-color:var(--teal)}
+.zeugnis-list{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.zeugnis-item{display:flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--hr);border-radius:4px;padding:6px 8px}
+.zeugnis-item-name{font-size:10px;color:var(--text);font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.zeugnis-item-url{font-size:9px;color:var(--text2);flex:2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.zeugnis-del{font-size:16px;color:var(--text2);cursor:pointer;background:none;border:none;line-height:1;padding:0 2px;flex-shrink:0}
+.zeugnis-del:hover{color:#ef4444}
+.zeugnis-qr-sel{font-size:9px;color:var(--teal);cursor:pointer;flex-shrink:0;border:1px solid var(--teal);border-radius:3px;padding:2px 5px;background:none;font-family:'JetBrains Mono',monospace}
+.zeugnis-qr-sel.active{background:var(--teal);color:#000}
+/* Custom Links */
+.cl-link-item{display:grid;grid-template-columns:32px 1fr 1fr auto;gap:6px;align-items:center;background:var(--bg3);border:1px solid var(--hr);border-radius:5px;padding:7px 10px;transition:border-color .15s}
+.cl-link-item:hover{border-color:rgba(22,160,133,.35)}
+.cl-link-icon{font-size:18px;text-align:center;cursor:pointer;user-select:none}
+.cl-link-name{font-size:11px;color:var(--text);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cl-link-url{font-size:9px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:'JetBrains Mono',monospace}
+.cl-link-del{font-size:18px;color:var(--text2);cursor:pointer;background:none;border:none;line-height:1;padding:0 3px;transition:color .15s}
+.cl-link-del:hover{color:#ef4444}
+.icon-picker{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;padding:8px;background:var(--bg2);border:1px solid var(--hr);border-radius:5px}
+.icon-opt{font-size:16px;cursor:pointer;padding:3px 5px;border-radius:3px;transition:background .1s;border:1px solid transparent}
+.icon-opt:hover,.icon-opt.sel{background:rgba(22,160,133,.15);border-color:var(--teal)}
 /* ── Video Upload ── */
 .vid-upload-panel{background:var(--bg2);border:1px solid var(--hr);border-radius:8px;padding:14px 16px;margin-bottom:18px}
 .vid-panel-title{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text2);font-weight:600;margin-bottom:10px;font-family:'JetBrains Mono',monospace}
@@ -706,6 +731,34 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
             <button class="ps-btn" onclick="setQROpt('content','website',this)">Web</button>
             <button class="ps-btn" onclick="setQROpt('content','linkedin',this)">LinkedIn</button>
             <button class="ps-btn" onclick="setQROpt('content','vcard',this)">vCard</button>
+            <button class="ps-btn" onclick="setQROpt('content','custom',this)">✏ Eigener</button>
+            <button class="ps-btn" onclick="setQROpt('content','zeugnis',this)">📜 Zeugnis</button>
+          </div>
+        </div>
+
+        <!-- Eigener Text / URL -->
+        <div class="qr-sub-panel" id="qr-custom-panel">
+          <div class="qr-sub-label">Eigener Inhalt</div>
+          <textarea class="qr-inp" id="qr-custom-text" rows="3" placeholder="https://... oder beliebiger Text, z.B. WiFi, Geo-Koordinaten, SMS..." oninput="qrOpts.customText=this.value;_cachedQRSvg='';_lastQRStyle='';renderQRPreview();liveRender()"></textarea>
+          <div style="font-size:9px;color:var(--text2);margin-top:4px;opacity:.7">
+            Beispiele: <span style="color:var(--teal);cursor:pointer" onclick="document.getElementById('qr-custom-text').value='https://';qrOpts.customText='https://';renderQRPreview()">URL</span> ·
+            <span style="color:var(--teal);cursor:pointer" onclick="document.getElementById('qr-custom-text').value='WIFI:S:MeinNetz;T:WPA;P:Passwort;;';qrOpts.customText=this.textContent;renderQRPreview()">WLAN</span> ·
+            <span style="color:var(--teal);cursor:pointer" onclick="document.getElementById('qr-custom-text').value='SMSTO:+49...:Hallo!';qrOpts.customText=this.textContent;renderQRPreview()">SMS</span> ·
+            <span style="color:var(--teal);cursor:pointer" onclick="document.getElementById('qr-custom-text').value='geo:52.5200,13.4050';qrOpts.customText=this.textContent;renderQRPreview()">Ort</span>
+          </div>
+        </div>
+
+        <!-- Zeugnisse -->
+        <div class="qr-sub-panel" id="qr-zeugnis-panel">
+          <div class="qr-sub-label">Zeugnisse &amp; Zertifikate</div>
+          <div style="display:flex;gap:6px;margin-bottom:8px">
+            <input type="text" class="qr-inp" id="zg-name" placeholder="Name (z.B. Bachelor-Zeugnis)" style="flex:1">
+            <input type="text" class="qr-inp" id="zg-url" placeholder="URL (Drive, LinkedIn, Dropbox...)" style="flex:2">
+            <button onclick="addZeugnis()" style="flex-shrink:0;padding:4px 10px;background:var(--teal);color:#000;border:none;border-radius:4px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">+</button>
+          </div>
+          <div class="zeugnis-list" id="zeugnis-list"></div>
+          <div id="zeugnis-hint" style="font-size:9px;color:var(--text2);opacity:.6;margin-top:6px;line-height:1.6">
+            ☝ Lade dein Zeugnis auf Google Drive, Dropbox oder LinkedIn hoch<br>und füge den öffentlichen Link ein. Der QR-Code öffnet es direkt.
           </div>
         </div>
 
@@ -937,6 +990,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
       <button class="tab-btn on" onclick="switchTab(this,'tab-cl')">Anschreiben</button>
       <button class="tab-btn" onclick="switchTab(this,'tab-opt')">Optimierung</button>
       <button class="tab-btn" onclick="switchTab(this,'tab-var')">Varianten</button>
+      <button class="tab-btn" onclick="switchTab(this,'tab-links')">🔗 Links</button>
     </div>
 
     <div class="tab-pane on" id="tab-cl">
@@ -995,13 +1049,76 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;over
       <div id="variants-list" style="margin-top:12px"><div style="font-size:12px;color:var(--text2);text-align:center;padding:20px">Noch keine Varianten gespeichert.</div></div>
     </div>
 
+    <div class="tab-pane" id="tab-links">
+      <div class="info-box">Füge beliebige Links mit Namen und Icon hinzu — sie erscheinen im Portfolio als eigene Sektion.</div>
+
+      <!-- Eingabe -->
+      <div style="background:var(--bg3);border:1px solid var(--hr);border-radius:6px;padding:12px;margin-bottom:12px">
+        <div class="f2" style="gap:8px;margin-bottom:8px">
+          <div class="fld" style="margin:0">
+            <label>Name / Bezeichnung</label>
+            <input id="cl-link-name" placeholder="z.B. Portfolio, GitHub, Xing, Behance..." style="width:100%;padding:8px 10px;background:var(--inp-bg);border:1px solid var(--inp-br);border-radius:3px;color:var(--text);font-family:inherit;font-size:13px;outline:none;box-sizing:border-box">
+          </div>
+          <div class="fld" style="margin:0">
+            <label>URL</label>
+            <input id="cl-link-url" placeholder="https://..." style="width:100%;padding:8px 10px;background:var(--inp-bg);border:1px solid var(--inp-br);border-radius:3px;color:var(--text);font-family:inherit;font-size:13px;outline:none;box-sizing:border-box">
+          </div>
+        </div>
+
+        <!-- Icon-Auswahl -->
+        <div style="margin-bottom:8px">
+          <label style="font-size:10px;color:var(--text2);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;display:block">Icon wählen</label>
+          <div class="icon-picker" id="cl-icon-picker">
+            <span class="icon-opt sel" data-icon="🔗" onclick="selectLinkIcon(this)">🔗</span>
+            <span class="icon-opt" data-icon="🌐" onclick="selectLinkIcon(this)">🌐</span>
+            <span class="icon-opt" data-icon="💼" onclick="selectLinkIcon(this)">💼</span>
+            <span class="icon-opt" data-icon="📁" onclick="selectLinkIcon(this)">📁</span>
+            <span class="icon-opt" data-icon="🎨" onclick="selectLinkIcon(this)">🎨</span>
+            <span class="icon-opt" data-icon="📸" onclick="selectLinkIcon(this)">📸</span>
+            <span class="icon-opt" data-icon="🎬" onclick="selectLinkIcon(this)">🎬</span>
+            <span class="icon-opt" data-icon="🎵" onclick="selectLinkIcon(this)">🎵</span>
+            <span class="icon-opt" data-icon="📝" onclick="selectLinkIcon(this)">📝</span>
+            <span class="icon-opt" data-icon="📊" onclick="selectLinkIcon(this)">📊</span>
+            <span class="icon-opt" data-icon="🧑‍💻" onclick="selectLinkIcon(this)">🧑‍💻</span>
+            <span class="icon-opt" data-icon="⚙️" onclick="selectLinkIcon(this)">⚙️</span>
+            <span class="icon-opt" data-icon="🔬" onclick="selectLinkIcon(this)">🔬</span>
+            <span class="icon-opt" data-icon="📜" onclick="selectLinkIcon(this)">📜</span>
+            <span class="icon-opt" data-icon="🏆" onclick="selectLinkIcon(this)">🏆</span>
+            <span class="icon-opt" data-icon="✉️" onclick="selectLinkIcon(this)">✉️</span>
+            <span class="icon-opt" data-icon="📱" onclick="selectLinkIcon(this)">📱</span>
+            <span class="icon-opt" data-icon="🗓️" onclick="selectLinkIcon(this)">🗓️</span>
+            <span class="icon-opt" data-icon="📍" onclick="selectLinkIcon(this)">📍</span>
+            <span class="icon-opt" data-icon="⭐" onclick="selectLinkIcon(this)">⭐</span>
+            <span class="icon-opt" data-icon="🚀" onclick="selectLinkIcon(this)">🚀</span>
+            <span class="icon-opt" data-icon="💡" onclick="selectLinkIcon(this)">💡</span>
+            <span class="icon-opt" data-icon="🤝" onclick="selectLinkIcon(this)">🤝</span>
+            <span class="icon-opt" data-icon="🎓" onclick="selectLinkIcon(this)">🎓</span>
+          </div>
+        </div>
+
+        <button class="btn btn-g" onclick="addCustomLink()" style="width:100%;justify-content:center">+ Link hinzufügen</button>
+      </div>
+
+      <!-- Liste -->
+      <div id="custom-links-list"></div>
+
+      <!-- Darstellung im Portfolio -->
+      <div style="margin-top:10px">
+        <label style="font-size:10px;color:var(--text2);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;display:block">Darstellung im Portfolio</label>
+        <div class="ps-opts" id="cl-display-opts" style="justify-content:flex-start">
+          <button class="ps-btn sel" onclick="setClDisplay('grid',this)">▦ Grid</button>
+          <button class="ps-btn" onclick="setClDisplay('list',this)">≡ Liste</button>
+          <button class="ps-btn" onclick="setClDisplay('pills',this)">◉ Pills</button>
+          <button class="ps-btn" onclick="setClDisplay('cards',this)">▣ Karten</button>
+        </div>
+      </div>
+    </div>
+
     <div class="stnav">
       <button class="btn btn-o" onclick="goStep(5)">← Zurück</button>
       <button class="btn btn-g" onclick="goStep(7)">Design →</button>
     </div>
   </div>
-
-  <!-- STEP 7: DESIGN -->
   <div class="step" id="step7">
     <div class="sttl">Stil &amp; Design</div>
     <p class="stsub">Gestalte deinen individuellen Auftritt.</p>
@@ -1229,7 +1346,8 @@ var D = {
   skills:{tech:[],soft:[],lang:[],cert:[]},
   projects:[],experience:[],education:[],
   coverLetter:'',cl_job:'',cl_company:'',cl_requirements:'',cl_tone:'formal',
-  variants:[]
+  variants:[],
+  customLinks:[] // [{name,url,icon}]
 };
 var portfolioStyle='noir',accentColor='#16a085',curStep=0;
 var fontChoice='elegant',animChoice='reveal',animSpeed='normal',darkMode=true;
@@ -1245,7 +1363,8 @@ var photoOffsetX=50,photoOffsetY=50,photoZoom=100;
 // Avatar (Alternative zum Foto)
 var photoAvatar='none'; // 'none'|'initials'|'geo'|'wave'|'dots'
 // QR Code
-var qrOpts={on:false,content:'auto',style:'accent',anim:'scan',trigger:'hover'};
+var qrOpts={on:false,content:'auto',style:'accent',anim:'scan',trigger:'hover',customText:'',selectedZeugnis:0};
+var qrZeugnisse=[]; // [{name,url}]
 var _lastQRText='',_lastQRStyle='',_cachedQRSvg='';
 // Video Clip
 var vidOpts={pos:'hero',style:'tilt',open:'lightbox',corner:'br',lbstyle:'dark',radius:'12',loop:'0',sound:'0',badge:'1',caption:'0',captionText:''};
@@ -1330,7 +1449,8 @@ function resetAll(){
   photoAvatar='none';
   document.querySelectorAll('[id^="avo-"]').forEach(function(el){el.classList.remove('sel');});
   var avoNone=document.getElementById('avo-none');if(avoNone)avoNone.classList.add('sel');
-  qrOpts={on:false,content:'auto',style:'accent',anim:'scan',trigger:'hover'};
+  qrOpts={on:false,content:'auto',style:'accent',anim:'scan',trigger:'hover',customText:'',selectedZeugnis:0};
+  qrZeugnisse=[];
   _cachedQRSvg='';_lastQRStyle='';
   var qrCb=document.getElementById('photo-qr');if(qrCb)qrCb.checked=false;
   var qrExp=document.getElementById('qr-expanded');if(qrExp)qrExp.style.display='none';
@@ -2752,10 +2872,123 @@ function setQROpt(type,val,btn){
   qrOpts[type]=val;
   if(btn){var par=btn.closest('.ps-opts');if(par)par.querySelectorAll('.ps-btn').forEach(function(b){b.classList.remove('sel');});btn.classList.add('sel');}
   if(type==='content'||type==='style'){_cachedQRSvg='';_lastQRStyle='';}
+  // Show/hide sub-panels
+  var cp=document.getElementById('qr-custom-panel');
+  if(cp)cp.classList.toggle('show',val==='custom'&&type==='content'||(type!=='content'&&qrOpts.content==='custom'));
+  var zp=document.getElementById('qr-zeugnis-panel');
+  if(zp)zp.classList.toggle('show',val==='zeugnis'&&type==='content'||(type!=='content'&&qrOpts.content==='zeugnis'));
   renderQRPreview();liveRender();
 }
 
-// ═══ VIDEO CLIP ═══════════════════════════════════════
+// ─── Zeugnisse ────────────────────────────────────────────────────
+function addZeugnis(){
+  var nameEl=document.getElementById('zg-name');
+  var urlEl=document.getElementById('zg-url');
+  if(!nameEl||!urlEl)return;
+  var nm=nameEl.value.trim(),url=urlEl.value.trim();
+  if(!url)return;
+  if(!nm)nm='Zeugnis '+(qrZeugnisse.length+1);
+  qrZeugnisse.push({name:nm,url:url});
+  nameEl.value='';urlEl.value='';
+  renderZeugnisList();
+  if(qrZeugnisse.length===1){qrOpts.selectedZeugnis=0;}
+  _cachedQRSvg='';_lastQRStyle='';
+  renderQRPreview();liveRender();
+}
+
+function removeZeugnis(i){
+  qrZeugnisse.splice(i,1);
+  if(qrOpts.selectedZeugnis>=qrZeugnisse.length)qrOpts.selectedZeugnis=Math.max(0,qrZeugnisse.length-1);
+  renderZeugnisList();
+  _cachedQRSvg='';_lastQRStyle='';
+  renderQRPreview();liveRender();
+}
+
+function selectZeugnis(i){
+  qrOpts.selectedZeugnis=i;
+  renderZeugnisList();
+  _cachedQRSvg='';_lastQRStyle='';
+  renderQRPreview();liveRender();
+}
+
+function renderZeugnisList(){
+  var list=document.getElementById('zeugnis-list');
+  if(!list)return;
+  if(!qrZeugnisse.length){list.innerHTML='<div style="font-size:10px;color:var(--text2);opacity:.6;padding:4px 0">Noch keine Zeugnisse hinzugefügt.</div>';return;}
+  list.innerHTML=qrZeugnisse.map(function(z,i){
+    var isActive=i===qrOpts.selectedZeugnis;
+    return '<div class="zeugnis-item">'+
+      '<div class="zeugnis-item-name">📜 '+z.name+'</div>'+
+      '<div class="zeugnis-item-url">'+z.url+'</div>'+
+      '<button class="zeugnis-qr-sel'+(isActive?' active':'')+'" onclick="selectZeugnis('+i+')" title="Für QR wählen">'+( isActive?'✓ QR':'QR')+'</button>'+
+      '<button class="zeugnis-del" onclick="removeZeugnis('+i+')" title="Entfernen">×</button>'+
+    '</div>';
+  }).join('');
+}
+
+
+// ═══ CUSTOM LINKS ════════════════════════════════════════════════
+var _clDisplayMode='grid';
+var _clSelectedIcon='🔗';
+
+function selectLinkIcon(el){
+  document.querySelectorAll('#cl-icon-picker .icon-opt').forEach(function(e){e.classList.remove('sel');});
+  el.classList.add('sel');
+  _clSelectedIcon=el.dataset.icon;
+}
+
+function addCustomLink(){
+  var nm=(document.getElementById('cl-link-name')||{}).value||'';
+  var url=(document.getElementById('cl-link-url')||{}).value||'';
+  nm=nm.trim();url=url.trim();
+  if(!nm||!url){alert('Bitte Name und URL ausfüllen.');return;}
+  if(!/^https?:\/\//i.test(url))url='https://'+url;
+  D.customLinks=D.customLinks||[];
+  D.customLinks.push({name:nm,url:url,icon:_clSelectedIcon});
+  var ni=document.getElementById('cl-link-name');if(ni)ni.value='';
+  var ui=document.getElementById('cl-link-url');if(ui)ui.value='';
+  renderCustomLinksList();liveRender();
+}
+
+function removeCustomLink(i){
+  D.customLinks.splice(i,1);
+  renderCustomLinksList();liveRender();
+}
+
+function moveCustomLink(i,dir){
+  var j=i+dir;
+  if(j<0||j>=D.customLinks.length)return;
+  var tmp=D.customLinks[i];D.customLinks[i]=D.customLinks[j];D.customLinks[j]=tmp;
+  renderCustomLinksList();liveRender();
+}
+
+function setClDisplay(mode,btn){
+  _clDisplayMode=mode;
+  if(btn){var par=btn.closest('.ps-opts');if(par)par.querySelectorAll('.ps-btn').forEach(function(b){b.classList.remove('sel');});btn.classList.add('sel');}
+  liveRender();
+}
+
+function renderCustomLinksList(){
+  var list=document.getElementById('custom-links-list');
+  if(!list)return;
+  var links=D.customLinks||[];
+  if(!links.length){
+    list.innerHTML='<div style="font-size:11px;color:var(--text2);text-align:center;padding:16px;opacity:.6">Noch keine Links — füge oben deinen ersten Link hinzu.</div>';
+    return;
+  }
+  list.innerHTML=links.map(function(l,i){
+    return '<div class="cl-link-item" style="margin-bottom:6px">'+
+      '<div class="cl-link-icon" title="Icon">'+l.icon+'</div>'+
+      '<div class="cl-link-name">'+l.name+'</div>'+
+      '<div class="cl-link-url">'+l.url+'</div>'+
+      '<div style="display:flex;gap:3px;flex-shrink:0">'+
+        (i>0?'<button class="cl-link-del" onclick="moveCustomLink('+i+',-1)" title="Nach oben">↑</button>':'')+
+        (i<links.length-1?'<button class="cl-link-del" onclick="moveCustomLink('+i+',1)" title="Nach unten">↓</button>':'')+
+        '<button class="cl-link-del" onclick="removeCustomLink('+i+')" title="Entfernen">×</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
 function vidSet(file){
   if(!file||!file.type.startsWith('video/'))return;
   var mb=(file.size/1024/1024).toFixed(1);
@@ -3912,6 +4145,51 @@ function buildPortfolio(full){
   (ctsrc.length?'<section id="sec-kontakt" class="sec"><div class="s-lbl">Kontakt</div><div class="s-ttl">Lass uns reden.</div><div class="ct-grid">'+ctHTML+'</div></section>':'')+
 
   (D_video&&vidOpts.pos==='section'?vidSectionHTML:'')+
+
+  // EIGENE LINKS
+  (D.customLinks&&D.customLinks.length?(function(){
+    var links=D.customLinks;
+    var mode=_clDisplayMode||'grid';
+    var secTitle='<div style="font-size:9px;letter-spacing:4px;text-transform:uppercase;color:'+c.text2+';font-family:'+c.mono+';margin-bottom:28px">Links &amp; Profile</div>';
+    var inner='';
+    if(mode==='grid'){
+      inner='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px">'+
+        links.map(function(l){
+          return '<a href="'+l.url+'" target="_blank" rel="noopener" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:18px 12px;background:'+c.bg2+';border:1px solid '+c.hr+';border-radius:10px;text-decoration:none;transition:border-color .2s,transform .2s;color:inherit" onmouseover="this.style.borderColor=\''+ac+'\';this.style.transform=\'translateY(-3px)\'" onmouseout="this.style.borderColor=\''+c.hr+'\';this.style.transform=\'\'">'+
+            '<span style="font-size:28px">'+l.icon+'</span>'+
+            '<span style="font-size:11px;font-weight:600;color:'+c.text+';text-align:center">'+l.name+'</span>'+
+          '</a>';
+        }).join('')+'</div>';
+    }else if(mode==='list'){
+      inner='<div style="display:flex;flex-direction:column;gap:8px">'+
+        links.map(function(l){
+          return '<a href="'+l.url+'" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:14px;padding:12px 16px;background:'+c.bg2+';border:1px solid '+c.hr+';border-radius:8px;text-decoration:none;color:inherit;transition:border-color .2s" onmouseover="this.style.borderColor=\''+ac+'\'" onmouseout="this.style.borderColor=\''+c.hr+'\'">'+
+            '<span style="font-size:22px;flex-shrink:0">'+l.icon+'</span>'+
+            '<span style="font-size:13px;font-weight:600;color:'+c.text+';flex:1">'+l.name+'</span>'+
+            '<span style="font-size:11px;color:'+c.text2+';font-family:'+c.mono+';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px">'+l.url.replace(/^https?:\/\//,'')+'</span>'+
+            '<span style="color:'+ac+';font-size:14px;flex-shrink:0">↗</span>'+
+          '</a>';
+        }).join('')+'</div>';
+    }else if(mode==='pills'){
+      inner='<div style="display:flex;flex-wrap:wrap;gap:10px">'+
+        links.map(function(l){
+          return '<a href="'+l.url+'" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:7px;padding:9px 18px;background:'+c.bg2+';border:1px solid '+c.hr+';border-radius:999px;text-decoration:none;font-size:12px;font-weight:600;color:'+c.text+';transition:all .2s" onmouseover="this.style.borderColor=\''+ac+'\';this.style.background=\''+ac+'18\'" onmouseout="this.style.borderColor=\''+c.hr+'\';this.style.background=\''+c.bg2+'\'">'+
+            '<span>'+l.icon+'</span><span>'+l.name+'</span>'+
+          '</a>';
+        }).join('')+'</div>';
+    }else{
+      // cards
+      inner='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px">'+
+        links.map(function(l){
+          return '<a href="'+l.url+'" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:12px;padding:16px;background:'+c.bg2+';border:1px solid '+c.hr+';border-radius:10px;text-decoration:none;color:inherit;transition:all .2s;position:relative;overflow:hidden" onmouseover="this.style.borderColor=\''+ac+'\';this.style.transform=\'translateY(-2px)\'" onmouseout="this.style.borderColor=\''+c.hr+'\';this.style.transform=\'\'">'+
+            '<span style="font-size:26px;flex-shrink:0">'+l.icon+'</span>'+
+            '<div style="min-width:0"><div style="font-size:12px;font-weight:700;color:'+c.text+'">'+l.name+'</div><div style="font-size:9px;color:'+c.text2+';font-family:'+c.mono+';overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+l.url.replace(/^https?:\/\//,'')+'</div></div>'+
+            '<span style="position:absolute;top:10px;right:12px;color:'+ac+';font-size:12px">↗</span>'+
+          '</a>';
+        }).join('')+'</div>';
+    }
+    return '<section style="padding:64px 10vw;border-top:1px solid '+c.hr+'">'+secTitle+inner+'</section>';
+  })():'')+
 
   // VIDEO UNTEN
   (D_video&&vidOpts.pos==='bottom'?vidBottomHTML:'')+
